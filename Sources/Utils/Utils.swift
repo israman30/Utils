@@ -4,15 +4,15 @@
 import SwiftUI
 
 public class MyClass {
-    func fizBuzz() -> String {
+    public func fizBuzz() -> String {
         return "Hello, World!"
     }
     
-    func anotherMethod() -> String {
+    public func anotherMethod() -> String {
         return "Another method"
     }
     
-    func yetAnotherMethod() -> String {
+    public func yetAnotherMethod() -> String {
         return "Yet another method"
     }
 }
