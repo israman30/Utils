@@ -7,4 +7,8 @@ public class MyClass {
     func fizBuzz() -> String {
         return "Hello, World!"
     }
+    
+    func anotherMethod() -> String {
+        return "Another method"
+    }
 }
