@@ -11,4 +11,8 @@ public class MyClass {
     func anotherMethod() -> String {
         return "Another method"
     }
+    
+    func yetAnotherMethod() -> String {
+        return "Yet another method"
+    }
 }
