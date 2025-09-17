@@ -17,6 +17,16 @@ public struct SquareGridView<Content: View, Item: Hashable>: View {
     
     let buildItem: (Item) -> Content
     
+    public init(items: [Item], totalCount: Int, columns: Int, columnSpacing: CGFloat, rowSpacing: CGFloat, showsIndicators: Bool, buildItem: @escaping (Item) -> Content) {
+        self.items = items
+        self.totalCount = totalCount
+        self.columns = columns
+        self.columnSpacing = columnSpacing
+        self.rowSpacing = rowSpacing
+        self.showsIndicators = showsIndicators
+        self.buildItem = buildItem
+    }
+    
     func adaptiveColumns(_ cellSize: CGFloat) -> [GridItem] {
         .init(repeating:  GridItem(.fixed(cellSize), spacing: columnSpacing), count: columns)
     }
@@ -57,7 +67,7 @@ class SomeModel: ObservableObject {
 struct GridTextView: View {
     @StateObject var model = SomeModel()
     var body: some View {
-        SquareGridView(items: model.characters, totalCount: model.totalCount, columns: 3, columnSpacing: 2, rowSpacing: 2) { item in
+        SquareGridView(items: model.characters, totalCount: model.totalCount, columns: 3, columnSpacing: 2, rowSpacing: 2, showsIndicators: true) { item in
                 Text(String("Item: \(item)"))
             }
             .onAppear {
