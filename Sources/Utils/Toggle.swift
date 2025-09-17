@@ -28,6 +28,14 @@ public struct ToggleViewUtils: View {
     var backgroundColor: Color? = Color.gray.opacity(0.2)
     var cornerRadius: CGFloat = 5
     
+    public init(titleKey: LocalizedStringKey, isOn: Binding<Bool>, tintColor: Color? = nil, backgroundColor: Color? = nil, cornerRadius: CGFloat = 5) {
+        self.titleKey = titleKey
+        self._isOn = isOn
+        self.tintColor = tintColor
+        self.backgroundColor = backgroundColor
+        self.cornerRadius = cornerRadius
+    }
+    
     public var body: some View {
         Toggle(titleKey, isOn: $isOn)
             .padding()
