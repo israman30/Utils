@@ -31,7 +31,7 @@ struct FloatingButtonView: View {
 }
 
 /// numerate the `alignments` for the floating button
-enum AlignmentFloatingButton {
+public enum AlignmentFloatingButton {
     case leading
     case trailing
 }
@@ -43,7 +43,7 @@ public struct FloatingButtonUtilsView: View {
     var action: () -> Void
     var alignment: AlignmentFloatingButton = .trailing
     
-    init(
+    public init(
         alignment: AlignmentFloatingButton = .trailing,
         color: Color = .blue,
         icon: String = "plus",

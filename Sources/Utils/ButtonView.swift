@@ -45,7 +45,7 @@ public struct ButtonViewUtils: View {
     let icon: String?
     let action: () -> Void
     
-    init(label: String, icon: String? = nil, action: @escaping() -> Void) {
+    public init(label: String, icon: String? = nil, action: @escaping() -> Void) {
         self.label = label
         self.icon = icon
         self.action = action
