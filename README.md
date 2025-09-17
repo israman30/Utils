@@ -13,7 +13,7 @@ A comprehensive SwiftUI utilities framework providing reusable components for iO
 2. Go to **File** → **Add Package Dependencies...**
 3. In the search bar, paste the repository URL:
    ```
-   https://github.com/yourusername/Application-iOS-Utilities.git
+   https://github.com/israman30/Utils.git
    ```
 4. Click **Add Package**
 5. Select your target and click **Add Package**
@@ -22,7 +22,7 @@ A comprehensive SwiftUI utilities framework providing reusable components for iO
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/Application-iOS-Utilities.git
+   git clone https://github.com/israman30/Utils.git
    ```
 2. Drag the `Utils.xcodeproj` file into your Xcode project
 3. Add the Utils framework to your target's dependencies
