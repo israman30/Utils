@@ -11,6 +11,11 @@ public struct RatingHeartsView: View {
     var rating: CGFloat
     var maxRating: Int
 
+    public init(rating: CGFloat, maxRating: Int) {
+        self.rating = rating
+        self.maxRating = maxRating
+    }
+
     public var body: some View {
         hearts
             .overlay(
@@ -27,7 +32,7 @@ public struct RatingHeartsView: View {
         .foregroundColor(.gray)
     }
     
-    var hearts: some View {
+    private var hearts: some View {
         HStack(spacing: 0) {
            ForEach(0..<maxRating, id: \.self) { _ in
                Image(systemName: "heart.fill")
@@ -41,4 +46,3 @@ public struct RatingHeartsView: View {
 #Preview {
     RatingHeartsView(rating: 1.5, maxRating: 5)
 }
-
