@@ -44,7 +44,7 @@ public struct TextFieldViewUtil<Header: View>: View {
     var isSecure: Bool = false
     var header: (() -> Header)? = nil
     
-    init(
+    public init(
         _ placeholder: String = "",
         inputText: Binding<String>,
         font: Font = .title,
