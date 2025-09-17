@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum GridOrientation {
+public enum GridOrientation {
     case vertical
     case horizontal
 }
@@ -44,7 +44,7 @@ public struct GridView<Content: View>: View {
         }
     }
     
-    init(_ orientation: GridOrientation = .vertical,
+    public init(_ orientation: GridOrientation = .vertical,
         columns: Int? = nil,
         rows: Int? = nil,
         @ViewBuilder content: @escaping () -> Content
@@ -77,4 +77,3 @@ struct GridViewDisplay: View {
 #Preview {
     GridViewDisplay()
 }
-
