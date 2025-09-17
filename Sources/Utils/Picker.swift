@@ -41,6 +41,18 @@ public struct PickerViewUtils<T: Hashable>: View {
     
     let onUpdate: (() -> Void)?
     
+    public init(
+        titleKey: String,
+        selection: Binding<T>,
+        opions: [T],
+        onUpdate: (() -> Void)? = nil
+    ) {
+        self._selection = selection
+        self.titleKey = titleKey
+        self.opions = opions
+        self.onUpdate = onUpdate
+    }
+    
     public var body: some View {
         if #available(iOS 17.0, *) {
             Picker(titleKey, selection: $selection) {
@@ -63,6 +75,18 @@ public struct DatePickerViewUtils: View {
     @Binding var date: Date
     var label: String = ""
     var alignment: HorizontalAlignment = .leading
+    
+    public init(
+        labelKey: String = "",
+        date: Binding<Date>,
+        label: String = "",
+        alignment: HorizontalAlignment = .leading
+    ) {
+        self.labelKey = labelKey
+        self._date = date
+        self.label = label
+        self.alignment = alignment
+    }
     
     public var body: some View {
         VStack(alignment: alignment) {
