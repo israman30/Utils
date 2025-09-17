@@ -49,7 +49,7 @@ public struct SliderControlViewUtils: View {
     var minTapAction: (() -> Void)? = nil
     var maxTapAction: (() -> Void)? = nil
     
-    init(
+    public init(
         value: Binding<Double>,
         min: Double,
         max: Double,
