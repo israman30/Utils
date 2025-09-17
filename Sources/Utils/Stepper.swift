@@ -26,7 +26,16 @@ public struct StepperViewUtils: View {
     let min: Int
     let max: Int
     let step: Int
-    let onUpdate:(() -> Void)?
+    let onUpdate: (() -> Void)?
+    
+    public init(title: String, value: Binding<Int>, min: Int, max: Int, step: Int, onUpdate: (() -> Void)?) {
+        self.title = title
+        self._value = value
+        self.min = min
+        self.max = max
+        self.step = step
+        self.onUpdate = onUpdate
+    }
     
     public var body: some View {
         if #available(iOS 17.0, *) {
