@@ -16,6 +16,12 @@ public struct HeartLikeView: View {
     
     @State private var isAnimating = false
     
+    public init(isLiked: Binding<Bool>, animationAmount: Double = 1.0, isAnimating: Bool = false) {
+        self._isLiked = isLiked
+        self.animationAmount = animationAmount
+        self.isAnimating = isAnimating
+    }
+    
     public var body: some View {
         Button {
             self.executeButtonAnimation()
