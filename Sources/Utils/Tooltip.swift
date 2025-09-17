@@ -62,7 +62,7 @@ struct Triangle: Shape {
     }
 }
 
-enum TooltipDirection {
+public enum TooltipDirection {
     case top, left, right, bottom
 }
 
@@ -71,7 +71,7 @@ public struct ActivityItemUtils<Icon: View>: View {
     var type: TooltipDirection = .bottom
     var icon: Icon
     
-    init(
+    public init(
         _ title: String,
         type: TooltipDirection = .bottom,
         @ViewBuilder icon: () -> Icon = EmptyView.init
