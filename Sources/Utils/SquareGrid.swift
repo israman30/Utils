@@ -58,7 +58,7 @@ struct GridTextView: View {
     @StateObject var model = SomeModel()
     var body: some View {
         SquareGridView(items: model.characters, totalCount: model.totalCount, columns: 3, columnSpacing: 2, rowSpacing: 2) { item in
-                Text("Item: \(item)")
+                Text(String("Item: \(item)"))
             }
             .onAppear {
                 model.loadMoreCharacters()
