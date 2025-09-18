@@ -42,7 +42,7 @@ struct TooltipView: View {
 }
 
 struct Triangle: Shape {
-    nonisolatpublic ed func path(in rect: CGRect) -> Path {
+    nonisolated func path(in rect: CGRect) -> Path {
         var path = Path()
         let topMiddle = CGPoint(x: rect.midX, y: rect.minY)
         let bottomLeft = CGPoint(x: rect.minX, y: rect.maxY)
