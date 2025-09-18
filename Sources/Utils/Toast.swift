@@ -10,10 +10,17 @@ import SwiftUI
 import SwiftUI
 
 public struct ToastView: View {
-    var text: String
-    @Binding var isVisible: Bool
-    var delayedAnimation: CGFloat = 2
-    var animationDuration: CGFloat = 0.3
+    public var text: String
+    @Binding public var isVisible: Bool
+    public var delayedAnimation: CGFloat = 2
+    public var animationDuration: CGFloat = 0.3
+    
+    public init(text: String, isVisible: Binding<Bool>, delayedAnimation: CGFloat = 2, animationDuration: CGFloat = 0.3) {
+        self._isVisible = isVisible
+        self.text = text
+        self.delayedAnimation = delayedAnimation
+        self.animationDuration = animationDuration
+    }
     
     public var body: some View {
         VStack {
