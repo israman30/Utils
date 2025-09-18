@@ -32,9 +32,9 @@ struct FormView: View {
 }
 
 public struct FormViewUtil<Content: View, Header: View, Footer: View>: View {
-    let content: () -> Content
-    var header: (() -> Header)? = nil
-    var footer: (() -> Footer)? = nil
+    public let content: () -> Content
+    public var header: (() -> Header)? = nil
+    public var footer: (() -> Footer)? = nil
     
     public init(
         @ViewBuilder content: @escaping () -> Content,

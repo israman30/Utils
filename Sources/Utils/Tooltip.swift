@@ -13,18 +13,18 @@ struct TooltipView: View {
     
     var body: some View {
         VStack(spacing: 50) {
-            ActivityItemUtils("Label")
+            TooltipUtils("Label")
             
-            ActivityItemUtils("Label 2") {
+            TooltipUtils("Label 2") {
                 Image(systemName: "heart.fill")
             }
             
-            ActivityItemUtils("12", type: .left) {
+            TooltipUtils("12", type: .left) {
                 Image(systemName: "bubble.fill")
             }
             
             HStack {
-                ActivityItemUtils("12", type: .right) {
+                TooltipUtils("12", type: .right) {
                     Image(systemName: "bubble.fill")
                 }
                 Text("Some text here")
@@ -42,7 +42,7 @@ struct TooltipView: View {
 }
 
 struct Triangle: Shape {
-    nonisolated func path(in rect: CGRect) -> Path {
+    nonisolatpublic ed func path(in rect: CGRect) -> Path {
         var path = Path()
         let topMiddle = CGPoint(x: rect.midX, y: rect.minY)
         let bottomLeft = CGPoint(x: rect.minX, y: rect.maxY)
@@ -66,10 +66,10 @@ public enum TooltipDirection {
     case top, left, right, bottom
 }
 
-public struct ActivityItemUtils<Icon: View>: View {
-    var title: String
-    var type: TooltipDirection = .bottom
-    var icon: Icon
+public struct TooltipUtils<Icon: View>: View {
+    public var title: String
+    public var type: TooltipDirection = .bottom
+    public var icon: Icon
     
     public init(
         _ title: String,

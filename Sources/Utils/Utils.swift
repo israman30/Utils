@@ -5,8 +5,8 @@ import SwiftUI
 
 public struct HeartLikeView: View {
     
-    @Binding var isLiked: Bool
-    @State var animationAmount = 1.0
+    @Binding public var isLiked: Bool
+    @State public var animationAmount = 1.0
     
     private let animationDuration = 0.1
     

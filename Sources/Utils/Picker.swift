@@ -35,11 +35,11 @@ struct PickerView: View {
 }
 
 public struct PickerViewUtils<T: Hashable>: View {
-    var titleKey: String
-    @Binding var selection: T
-    var opions: [T]
+    public var titleKey: String
+    @Binding public var selection: T
+    public var opions: [T]
     
-    let onUpdate: (() -> Void)?
+    public let onUpdate: (() -> Void)?
     
     public init(
         titleKey: String,

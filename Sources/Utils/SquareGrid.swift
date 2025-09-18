@@ -8,14 +8,14 @@
 import SwiftUI
 
 public struct SquareGridView<Content: View, Item: Hashable>: View {
-    var items: [Item]
-    var totalCount: Int
-    var columns: Int = 3
-    var columnSpacing: CGFloat = 2
-    var rowSpacing: CGFloat = 2
-    var showsIndicators: Bool = false
+    public var items: [Item]
+    public var totalCount: Int
+    public var columns: Int = 3
+    public var columnSpacing: CGFloat = 2
+    public var rowSpacing: CGFloat = 2
+    public var showsIndicators: Bool = false
     
-    let buildItem: (Item) -> Content
+    public let buildItem: (Item) -> Content
     
     public init(items: [Item], totalCount: Int, columns: Int, columnSpacing: CGFloat, rowSpacing: CGFloat, showsIndicators: Bool, buildItem: @escaping (Item) -> Content) {
         self.items = items

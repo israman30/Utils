@@ -32,17 +32,17 @@ struct TextFieldUtils: View {
 }
 
 public struct TextFieldViewUtil<Header: View>: View {
-    var placeholder: String = ""
-    @Binding var inputText: String
-    var font: Font = .title
-    var headerText = ""
-    var iconPlaceholder = ""
-    var shadowRadius: CGFloat = 2
-    var color: Color = Color.gray.opacity(0.1)
-    var cornerRadius: CGFloat = 20
-    var shadowColor: Color = .gray
-    var isSecure: Bool = false
-    var header: (() -> Header)? = nil
+    public var placeholder: String = ""
+    @Binding public var inputText: String
+    public var font: Font = .title
+    public var headerText = ""
+    public var iconPlaceholder = ""
+    public var shadowRadius: CGFloat = 2
+    public var color: Color = Color.gray.opacity(0.1)
+    public var cornerRadius: CGFloat = 20
+    public var shadowColor: Color = .gray
+    public var isSecure: Bool = false
+    public var header: (() -> Header)? = nil
     
     public init(
         _ placeholder: String = "",

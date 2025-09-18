@@ -14,10 +14,10 @@ public enum GridOrientation {
 
 public struct GridView<Content: View>: View {
     
-    var orientation: GridOrientation = .vertical
-    let columns: Int?
-    let rows: Int?
-    let content: () -> Content
+    public var orientation: GridOrientation = .vertical
+    public let columns: Int?
+    public let rows: Int?
+    public let content: () -> Content
     
     var adaptiveColumns: [GridItem] {
         Array(repeating: GridItem(.flexible()), count: columns ?? 1)

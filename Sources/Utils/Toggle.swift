@@ -22,11 +22,11 @@ struct ToggleView: View {
 }
 
 public struct ToggleViewUtils: View {
-    var titleKey: LocalizedStringKey = ""
-    @Binding var isOn: Bool
-    var tintColor: Color? = .blue
-    var backgroundColor: Color? = Color.gray.opacity(0.2)
-    var cornerRadius: CGFloat = 5
+    public var titleKey: LocalizedStringKey = ""
+    @Binding public var isOn: Bool
+    public var tintColor: Color? = .blue
+    public var backgroundColor: Color? = Color.gray.opacity(0.2)
+    public var cornerRadius: CGFloat = 5
     
     public init(titleKey: LocalizedStringKey, isOn: Binding<Bool>, tintColor: Color? = nil, backgroundColor: Color? = nil, cornerRadius: CGFloat = 5) {
         self.titleKey = titleKey
