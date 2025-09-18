@@ -41,11 +41,11 @@ struct ButtonView: View {
 }
 
 public struct ButtonViewUtils: View {
-    let label: String
-    let icon: String?
-    let action: () -> Void
+    public let label: String
+    public let icon: String?
+    public let action: () -> Void
     
-    init(label: String, icon: String? = nil, action: @escaping() -> Void) {
+    public init(label: String, icon: String? = nil, action: @escaping() -> Void) {
         self.label = label
         self.icon = icon
         self.action = action
