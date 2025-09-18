@@ -21,12 +21,21 @@ struct StepperView: View {
 }
 
 public struct StepperViewUtils: View {
-    var title: String = ""
-    @Binding var value: Int
-    let min: Int
-    let max: Int
-    let step: Int
-    let onUpdate:(() -> Void)?
+    public var title: String = ""
+    @Binding public var value: Int
+    public let min: Int
+    public let max: Int
+    public let step: Int
+    public let onUpdate: (() -> Void)?
+    
+    public init(title: String, value: Binding<Int>, min: Int, max: Int, step: Int, onUpdate: (() -> Void)?) {
+        self.title = title
+        self._value = value
+        self.min = min
+        self.max = max
+        self.step = step
+        self.onUpdate = onUpdate
+    }
     
     public var body: some View {
         if #available(iOS 17.0, *) {
