@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct PickerView: View {
     @State var selection: String = ""
     let options = ["Car", "Plane", "Boat", "Train"]
@@ -35,11 +33,23 @@ struct PickerView: View {
 }
 
 public struct PickerViewUtils<T: Hashable>: View {
-    var titleKey: String
-    @Binding var selection: T
-    var opions: [T]
+    public var titleKey: String
+    @Binding public var selection: T
+    public var opions: [T]
     
-    let onUpdate: (() -> Void)?
+    public let onUpdate: (() -> Void)?
+    
+    public init(
+        titleKey: String,
+        selection: Binding<T>,
+        opions: [T],
+        onUpdate: (() -> Void)? = nil
+    ) {
+        self._selection = selection
+        self.titleKey = titleKey
+        self.opions = opions
+        self.onUpdate = onUpdate
+    }
     
     public var body: some View {
         if #available(iOS 17.0, *) {
@@ -63,6 +73,18 @@ public struct DatePickerViewUtils: View {
     @Binding var date: Date
     var label: String = ""
     var alignment: HorizontalAlignment = .leading
+    
+    public init(
+        labelKey: String = "",
+        date: Binding<Date>,
+        label: String = "",
+        alignment: HorizontalAlignment = .leading
+    ) {
+        self.labelKey = labelKey
+        self._date = date
+        self.label = label
+        self.alignment = alignment
+    }
     
     public var body: some View {
         VStack(alignment: alignment) {
