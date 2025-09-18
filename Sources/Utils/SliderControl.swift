@@ -37,19 +37,19 @@ struct SliderControlView: View {
 
 public struct SliderControlViewUtils: View {
     
-    var label: String? = nil
-    @Binding var value: Double
-    var min: Double = 0
-    var max: Double = 100
-    var minIcon: String? = nil
-    var maxIcon: String? = nil
+    public var label: String? = nil
+    @Binding public var value: Double
+    public var min: Double = 0
+    public var max: Double = 100
+    public var minIcon: String? = nil
+    public var maxIcon: String? = nil
     
-    let onUpdate: (() -> Void)? = nil
-    var onEditingChanged: ((Bool) -> Void)? = nil
-    var minTapAction: (() -> Void)? = nil
-    var maxTapAction: (() -> Void)? = nil
+    public let onUpdate: (() -> Void)? = nil
+    public var onEditingChanged: ((Bool) -> Void)? = nil
+    public var minTapAction: (() -> Void)? = nil
+    public var maxTapAction: (() -> Void)? = nil
     
-    init(
+    public init(
         value: Binding<Double>,
         min: Double,
         max: Double,
