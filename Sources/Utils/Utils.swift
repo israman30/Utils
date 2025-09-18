@@ -5,8 +5,8 @@ import SwiftUI
 
 public struct HeartLikeView: View {
     
-    @Binding var isLiked: Bool
-    @State var animationAmount = 1.0
+    @Binding public var isLiked: Bool
+    @State public var animationAmount = 1.0
     
     private let animationDuration = 0.1
     
@@ -15,6 +15,12 @@ public struct HeartLikeView: View {
     }
     
     @State private var isAnimating = false
+    
+    public init(isLiked: Binding<Bool>, animationAmount: Double = 1.0, isAnimating: Bool = false) {
+        self._isLiked = isLiked
+        self.animationAmount = animationAmount
+        self.isAnimating = isAnimating
+    }
     
     public var body: some View {
         Button {
