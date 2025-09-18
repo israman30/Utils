@@ -8,8 +8,13 @@
 import SwiftUI
 
 public struct RatingStarsView: View {
-    var rating: CGFloat
-    var maxRating: Int
+    public var rating: CGFloat
+    public var maxRating: Int
+    
+    public init(rating: CGFloat, maxRating: Int) {
+        self.rating = rating
+        self.maxRating = maxRating
+    }
 
     public var body: some View {
         stars
