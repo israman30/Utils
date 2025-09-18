@@ -32,11 +32,11 @@ struct FormView: View {
 }
 
 public struct FormViewUtil<Content: View, Header: View, Footer: View>: View {
-    let content: () -> Content
-    var header: (() -> Header)? = nil
-    var footer: (() -> Footer)? = nil
+    public let content: () -> Content
+    public var header: (() -> Header)? = nil
+    public var footer: (() -> Footer)? = nil
     
-    init(
+    public init(
         @ViewBuilder content: @escaping () -> Content,
         header: (() -> Header)? = nil,
         footer: (() -> Footer)? = nil
@@ -66,7 +66,7 @@ public struct FormViewUtil<Content: View, Header: View, Footer: View>: View {
 }
 
 extension FormViewUtil where Header == EmptyView {
-    init(@ViewBuilder content: @escaping () -> Content, footer: @escaping () -> Footer) {
+    public init(@ViewBuilder content: @escaping () -> Content, footer: @escaping () -> Footer) {
         self.content = content
         self.header = nil
         self.footer = footer
@@ -74,7 +74,7 @@ extension FormViewUtil where Header == EmptyView {
 }
 
 extension FormViewUtil where Footer == EmptyView {
-    init(@ViewBuilder content: @escaping () -> Content, header: @escaping () -> Header) {
+    public init(@ViewBuilder content: @escaping () -> Content, header: @escaping () -> Header) {
         self.content = content
         self.header = header
         self.footer = nil
@@ -82,9 +82,10 @@ extension FormViewUtil where Footer == EmptyView {
 }
 
 extension FormViewUtil where Header == EmptyView, Footer == EmptyView {
-    init (@ViewBuilder content: @escaping () -> Content) {
+    public init (@ViewBuilder content: @escaping () -> Content) {
         self.content = content
         self.header = nil
         self.footer = nil
     }
 }
+
