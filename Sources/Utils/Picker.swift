@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct PickerView: View {
     @State var selection: String = ""
     let options = ["Car", "Plane", "Boat", "Train"]
@@ -38,18 +36,17 @@ public struct PickerViewUtils<T: Hashable>: View {
     public var titleKey: String
     @Binding public var selection: T
     public var opions: [T]
-    
     public let onUpdate: (() -> Void)?
     
     public init(
         titleKey: String,
         selection: Binding<T>,
-        options: [T],
+        opions: [T],
         onUpdate: (() -> Void)? = nil
     ) {
         self._selection = selection
         self.titleKey = titleKey
-        self.opions = options
+        self.opions = opions
         self.onUpdate = onUpdate
     }
     
