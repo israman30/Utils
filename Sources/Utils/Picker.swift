@@ -13,7 +13,7 @@ struct PickerView: View {
     @State var date = Date.now
     var body: some View {
         VStack {
-            PickerViewUtils(titleKey: "Select a transport", selection: $selection, opions: options) {
+            PickerViewUtils(titleKey: "Select a transport", selection: $selection, options: options) {
                 // update
             }
             .pickerStyle(.wheel)
@@ -36,7 +36,6 @@ public struct PickerViewUtils<T: Hashable>: View {
     public var titleKey: String
     @Binding public var selection: T
     public var opions: [T]
-    
     public let onUpdate: (() -> Void)?
     
     public init(
