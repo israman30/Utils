@@ -56,7 +56,7 @@ struct AccessibilityOptionModifier: ViewModifier {
     private let behaviour: AccessibilityChildBehavior?
     private let heading: AccessibilityHeadingLevel?
     
-    public init(options: [AccessibilityOption]) {
+    public init(_ options: [AccessibilityOption]) {
         var label: String? = nil
         var value: String? = nil
         var hint: String? = nil
@@ -120,7 +120,7 @@ extension View {
     }
     
     public func accessibility(options: [AccessibilityOption]) -> some View {
-        self.modifier(AccessibilityOptionModifier(options: options))
+        self.modifier(AccessibilityOptionModifier(options))
     }
 }
 
