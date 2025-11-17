@@ -121,7 +121,7 @@ struct GridViewDisplay: View {
             .padding(.horizontal)
             
             Text("Horizontal:").font(.title2).bold()
-            GridView(.horizontal, rows: 2, spacing: 20) {
+            GridView(.horizontal, rows: 1, spacing: 20) {
                 ForEach(0..<4) { idx in
                     GridItemView(
                         image: Image(systemName: "photo"),
@@ -131,7 +131,7 @@ struct GridViewDisplay: View {
                     )
                 }
             }
-            .frame(height: 180)
+            .frame(height: 120)
             .padding(.vertical)
         }
     }
