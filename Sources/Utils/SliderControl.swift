@@ -17,14 +17,15 @@ struct SliderControlView: View {
                 min: 0,
                 max: 100,
                 minIcon: "minus.circle.fill",
-                maxIcon: "plus.circle.fill"
-            ) { _ in
-                // update
-            } minTapAction: {
-                value -= 1
-            } maxTapAction: {
-                value += 1
-            }
+                maxIcon: "plus.circle.fill",
+                minTapAction: {
+                    value -= 1
+                }, maxTapAction: {
+                    value += 1
+                }, onUpdate: {
+                    // update
+                }
+            )
             .padding()
         }
     }
@@ -36,80 +37,124 @@ struct SliderControlView: View {
 
 
 public struct SliderControlViewUtils: View {
-    
+    // MARK: - Customization Properties
     public var label: String? = nil
+    public var minimumValueLabel: String? = nil
+    public var maximumValueLabel: String? = nil
+    public var accessibilityLabel: String? = nil
+    public var accessibilityHint: String = ""
     @Binding public var value: Double
     public var min: Double = 0
     public var max: Double = 100
+    public var step: Double = 1
     public var minIcon: String? = nil
     public var maxIcon: String? = nil
-    
-    public let onUpdate: (() -> Void)? = nil
-    public var onEditingChanged: ((Bool) -> Void)? = nil
+    public var isEnabled: Bool = true
     public var minTapAction: (() -> Void)? = nil
     public var maxTapAction: (() -> Void)? = nil
-    
+    public var onEditingChanged: ((Bool) -> Void)? = nil
+    public var onUpdate: (() -> Void)? = nil
+
+    // MARK: - Init
     public init(
         value: Binding<Double>,
-        min: Double,
-        max: Double,
+        min: Double = 0,
+        max: Double = 100,
+        step: Double = 1,
         minIcon: String? = nil,
         maxIcon: String? = nil,
+        label: String? = nil,
         minimumValueLabel: String? = nil,
         maximumValueLabel: String? = nil,
-        onEditingChanged: ((Bool) -> Void)? = nil,
+        accessibilityLabel: String? = nil,
+        accessibilityHint: String = "",
+        isEnabled: Bool = true,
         minTapAction: (() -> Void)? = nil,
-        maxTapAction: (() -> Void)? = nil
+        maxTapAction: (() -> Void)? = nil,
+        onEditingChanged: ((Bool) -> Void)? = nil,
+        onUpdate: (() -> Void)? = nil
     ) {
         self._value = value
         self.min = min
         self.max = max
+        self.step = step
         self.minIcon = minIcon
         self.maxIcon = maxIcon
-        self.onEditingChanged = onEditingChanged
+        self.label = label
+        self.minimumValueLabel = minimumValueLabel
+        self.maximumValueLabel = maximumValueLabel
+        self.accessibilityLabel = accessibilityLabel
+        self.accessibilityHint = accessibilityHint
+        self.isEnabled = isEnabled
         self.minTapAction = minTapAction
         self.maxTapAction = maxTapAction
+        self.onEditingChanged = onEditingChanged
+        self.onUpdate = onUpdate
     }
-    
+
+    // MARK: - View
     public var body: some View {
-        HStack {
+        HStack(spacing: 12) {
             if let minIcon {
-                Image(systemName: minIcon)
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .onTapGesture {
-                        minTapAction?()
-                    }
+                Button(action: {
+                    minTapAction?()
+                }) {
+                    Image(systemName: minIcon)
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .foregroundColor(isEnabled ? .accentColor : .gray)
+                        .accessibilityLabel(minimumValueLabel ?? "Minimum")
+                }
+                .disabled(!isEnabled)
             }
-            if let onEditingChanged {
+            VStack(alignment: .leading, spacing: 4) {
+                if let label {
+                    Text(label)
+                        .font(.caption).foregroundColor(.secondary)
+                        .accessibilityHidden(true)
+                }
                 Slider(
                     value: Binding<Double>(
-                        get: {
-                            value
-                        },
+                        get: { value },
                         set: { newValue in
                             let setValue = Swift.max(Swift.min(newValue, max), min)
                             value = setValue
                             onUpdate?()
-                        }
-                    ),
+                        }),
                     in: min...max,
-                    step: 1,
-                    onEditingChanged: onEditingChanged
-                ) {
-                    if let label {
-                        Text(label)
+                    step: step,
+                    onEditingChanged: onEditingChanged ?? { _ in })
+                .disabled(!isEnabled)
+                .accessibilityLabel(accessibilityLabel ?? label ?? "Slider")
+                .accessibilityValue("\(Int(value))")
+                .accessibilityHint(accessibilityHint)
+                .accessibilityAdjustableAction { direction in
+                    switch direction {
+                    case .increment: value = Swift.min(value + step, max); onUpdate?()
+                    case .decrement: value = Swift.max(value - step, min); onUpdate?()
+                    default: break
                     }
+                }
+                HStack {
+                    if let minimumValueLabel { Text(minimumValueLabel).font(.caption2).foregroundColor(.secondary) }
+                    Spacer()
+                    if let maximumValueLabel { Text(maximumValueLabel).font(.caption2).foregroundColor(.secondary) }
                 }
             }
             if let maxIcon {
-                Image(systemName: maxIcon)
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .onTapGesture {
-                        maxTapAction?()
-                    }
+                Button(action: {
+                    maxTapAction?()
+                }) {
+                    Image(systemName: maxIcon)
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .foregroundColor(isEnabled ? .accentColor : .gray)
+                        .accessibilityLabel(maximumValueLabel ?? "Maximum")
+                }
+                .disabled(!isEnabled)
             }
         }
+        .padding()
     }
 }
+
