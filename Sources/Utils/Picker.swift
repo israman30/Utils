@@ -29,7 +29,11 @@ struct PickerView: View {
                 // update logic
             }
             .padding()
-            .background(RoundedRectangle(cornerRadius: 12).fill(Color.gray.opacity(0.08)))
+            .background(
+                RoundedRectangle(
+                    cornerRadius: 12
+                ).fill(Color.gray.opacity(0.08))
+            )
             .shadow(radius: 2)
 
             // Style selector for demoing different styles
@@ -56,7 +60,15 @@ struct PickerView: View {
             Spacer()
         }
         .padding()
-        .background(LinearGradient(gradient: Gradient(colors: [Color.white, Color.blue.opacity(0.08)]), startPoint: .top, endPoint: .bottom))
+        .background(
+            LinearGradient(
+                gradient: Gradient(
+                    colors: [Color.white, Color.blue.opacity(0.08)]
+                ),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
     }
 }
 
@@ -136,6 +148,7 @@ struct AnyPickerStyleModifier: ViewModifier {
         }
     }
 }
+
 extension View {
     func applyAnyPickerStyle(_ style: AnyPickerStyle) -> some View {
         self.modifier(AnyPickerStyleModifier(style: style))
