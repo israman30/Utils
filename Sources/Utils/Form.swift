@@ -9,21 +9,41 @@ import SwiftUI
 
 struct FormView: View {
     var body: some View {
-        VStack {
+        VStack(spacing: 24) {
             FormViewUtil {
                 Text("Body Form")
+                    .font(.title2)
+                    .fontWeight(.medium)
+                    .foregroundColor(.primary)
+                    .accessibilityLabel("Body of the Form")
             } header: {
-                Text("header")
+                Text("Header")
+                    .font(.headline)
+                    .foregroundColor(.accentColor)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityLabel("Header section")
             } footer: {
                 Text("Footer")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .accessibilityLabel("Footer section")
             }
-            
+
             FormViewUtil {
                 Text("Some View")
+                    .font(.body)
+                    .foregroundColor(.primary)
+                    .accessibilityLabel("Some view in form")
             } footer: {
                 Text("Some footer")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .accessibilityLabel("Some footer section")
             }
         }
+        .padding()
+        .background(Color(UIColor.systemBackground))
+        .accessibilityElement(children: .contain)
     }
 }
 
@@ -51,17 +71,30 @@ public struct FormViewUtil<Content: View, Header: View, Footer: View>: View {
             Group {
                 Section {
                     content()
+                        .font(.body)
+                        .foregroundColor(.primary)
+                        .accessibilityAddTraits(.isStaticText)
                 } header: {
                     if let header = header {
                         header()
+                            .font(.headline)
+                            .foregroundColor(.accentColor)
+                            .accessibilityAddTraits(.isHeader)
                     }
                 } footer: {
                     if let footer = footer {
                         footer()
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                            .accessibilityLabel("Section footer")
                     }
                 }
             }
         }
+        .background(Color(UIColor.systemGroupedBackground))
+        .cornerRadius(12)
+        .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.1), radius: 4, x: 0, y: 2)
+        .accessibilityElement(children: .contain)
     }
 }
 
