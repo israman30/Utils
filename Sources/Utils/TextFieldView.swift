@@ -43,6 +43,11 @@ public struct TextFieldViewUtil<Header: View>: View {
     public var shadowColor: Color = .gray
     public var isSecure: Bool = false
     public var header: (() -> Header)? = nil
+
+    // UX Improvements: FocusState for iOS 15+
+    @FocusState private var isFocused: Bool
+    // Toggle show/hide password
+    @State private var isPasswordVisible: Bool = false
     
     public init(
         _ placeholder: String = "",
@@ -74,25 +79,51 @@ public struct TextFieldViewUtil<Header: View>: View {
     public var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Image(systemName: iconPlaceholder)
+                if !iconPlaceholder.isEmpty {
+                    Image(systemName: iconPlaceholder)
+                        .accessibilityHidden(true)
+                }
                 if isSecure {
                     VStack(alignment: .leading) {
-                        if let header = header {
-                            header()
-                        }
+                        if let header = header { header() }
                         VStack {
-                            SecureField(placeholder, text: $inputText)
+                            if isPasswordVisible {
+                                TextField(placeholder, text: $inputText)
+                                    .textContentType(.password)
+                                    .autocapitalization(.none)
+                                    .disableAutocorrection(true)
+                                    .focused($isFocused)
+                                    .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
+                                    .accessibilityHint("Password field, visible")
+                                // Show/Hide button
+                            } else {
+                                SecureField(placeholder, text: $inputText)
+                                    .textContentType(.password)
+                                    .focused($isFocused)
+                                    .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
+                                    .accessibilityHint("Password field, hidden")
+                            }
+                            Button(action: { isPasswordVisible.toggle() }) {
+                                Image(systemName: isPasswordVisible ? "eye.slash" : "eye")
+                                    .foregroundColor(.gray)
+                                    .accessibilityLabel(isPasswordVisible ? "Hide password" : "Show password")
+                                    .accessibilityValue(headerText.isEmpty ? placeholder : headerText)
+                            }
+                            .buttonStyle(.plain)
                         }
                         .padding()
                         .customModifier(gradient: color)
                     }
                 } else {
                     VStack(alignment: .leading) {
-                        if let header = header {
-                            header()
-                        }
+                        if let header = header { header() }
                         VStack {
                             TextField(placeholder, text: $inputText)
+                                .focused($isFocused)
+                                .textContentType(.none)
+                                .autocapitalization(.none)
+                                .disableAutocorrection(false)
+                                .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
                         }
                         .padding()
                         .customModifier(gradient: color)
@@ -101,6 +132,9 @@ public struct TextFieldViewUtil<Header: View>: View {
             }
             .font(font)
             .textFieldStyle(.plain)
+            .accessibilityElement(children: .combine)
+            // Accessibility: VoiceOver Traits
+            .accessibilityAddTraits(.isKeyboardKey)
         }
     }
 }
