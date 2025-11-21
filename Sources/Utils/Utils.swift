@@ -23,35 +23,64 @@ public struct HeartLikeView: View {
     }
     
     public var body: some View {
-        Button {
-            self.executeButtonAnimation()
-        } label: {
-            VStack {
-                if #available(iOS 15.0, *) {
-                    Image(systemName: isLiked ? "heart.fill" : "heart")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 100, height: 100)
-                        .foregroundStyle(isLiked ? .red : .gray)
-                } else {
-                    // Fallback on earlier versions
-                }
-            }
-            .scaleEffect(isAnimating ? animationScale : 1)
-            .animation(.easeInOut(duration: animationDuration), value: animationDuration)
+        Button(action: executeButtonAnimation) {
+            heartImage
+                .frame(width: 100, height: 100)
+                .contentShape(Rectangle())
         }
+        .buttonStyle(PlainButtonStyle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(isLiked ? "Unlike" : "Like")
+        .accessibilityValue(isLiked ? "Liked" : "Not liked")
+        .accessibilityHint("Double tap to toggle")
+        .accessibilityAddTraits(.isButton)
     }
     
     private func executeButtonAnimation() {
-        self.isAnimating = true
+        guard !isAnimating else { return }
+        isAnimating = true
         DispatchQueue.main.asyncAfter(deadline: .now() + animationDuration) {
-            self.isAnimating = false
-            self.isLiked.toggle()
+            isAnimating = false
+            isLiked.toggle()
+            triggerHapticFeedback()
         }
+    }
+
+    @ViewBuilder
+    private var heartImage: some View {
+        Image(systemName: isLiked ? "heart.fill" : "heart")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .scaleEffect(isAnimating ? animationScale * animationAmount : 1)
+            .animation(.easeInOut(duration: animationDuration), value: isAnimating)
+            .modifier(HeartForegroundModifier(isLiked: isLiked))
+            .accessibilityHidden(true)
+    }
+
+    private func triggerHapticFeedback() {
+#if canImport(UIKit)
+        if #available(iOS 10.0, *) {
+            let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+            feedbackGenerator.prepare()
+            feedbackGenerator.impactOccurred()
+        }
+#endif
     }
 }
 
 #Preview {
     HeartLikeView(isLiked: .constant(false))
+}
+
+private struct HeartForegroundModifier: ViewModifier {
+    let isLiked: Bool
+
+    func body(content: Content) -> some View {
+        if #available(iOS 15.0, *) {
+            content.foregroundStyle(isLiked ? .red : .gray)
+        } else {
+            content.foregroundColor(isLiked ? .red : .gray)
+        }
+    }
 }
 
