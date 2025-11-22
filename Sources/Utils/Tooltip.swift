@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-import SwiftUI
-
+#if DEBUG
 struct TooltipView: View {
     
     var body: some View {
@@ -40,6 +39,7 @@ struct TooltipView: View {
 #Preview {
     TooltipView()
 }
+#endif
 
 struct Triangle: Shape {
     nonisolated func path(in rect: CGRect) -> Path {
@@ -70,53 +70,95 @@ public struct TooltipUtils<Icon: View>: View {
     public var title: String
     public var type: TooltipDirection = .bottom
     public var icon: Icon
+    public var dismissOnTap: Bool
+    public var lineLimit: Int?
+    public var tapAction: (() -> Void)?
+    
+    @State private var isPresented: Bool = true
     
     public init(
         _ title: String,
         type: TooltipDirection = .bottom,
+        dismissOnTap: Bool = false,
+        lineLimit: Int? = 1,
+        tapAction: (() -> Void)? = nil,
         @ViewBuilder icon: () -> Icon = EmptyView.init
     ) {
         self.title = title
         self.type = type
+        self.dismissOnTap = dismissOnTap
+        self.lineLimit = lineLimit
+        self.tapAction = tapAction
         self.icon = icon()
     }
     
     public var body: some View {
         ZStack(alignment: alignment) {
-            HStack {
-                HStack(spacing: 2) {
-                    icon
-                        .foregroundStyle(.white)
-                        .padding(.trailing, 2)
-                    
-                    Text(title)
-                        .font(.system(size: 14, weight: .semibold))
-                        .lineLimit(1)
-                        .foregroundStyle(.white)
-                }
-                .padding(8)
-                .background(Color.red.opacity(0.5))
-                .cornerRadius(8)
+            if isPresented || !dismissOnTap {
+                tooltipContent
+                    .transition(.opacity.combined(with: .scale(scale: 0.95)))
             }
             
-            switch type {
-            case .top:
-                triangle()
-                    .offset(y: -10)
-            case .left:
-                triangle()
-                    .rotationEffect(.degrees(-90))
-                    .offset(x: -15)
-            case .right:
-                triangle()
-                    .rotationEffect(.degrees(90))
-                    .offset(x: 15)
-            case .bottom:
-                triangle()
-                    .rotationEffect(.degrees(180))
-                    .offset(y: 10)
+            if isPresented || !dismissOnTap {
+                switch type {
+                case .top:
+                    triangle()
+                        .offset(y: -10)
+                case .left:
+                    triangle()
+                        .rotationEffect(.degrees(-90))
+                        .offset(x: -15)
+                case .right:
+                    triangle()
+                        .rotationEffect(.degrees(90))
+                        .offset(x: 15)
+                case .bottom:
+                    triangle()
+                        .rotationEffect(.degrees(180))
+                        .offset(y: 10)
+                }
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: isPresented)
+        .transition(.opacity)
+        .contentShape(Rectangle())
+        .modifierIf(isTappable) { view in
+            view.onTapGesture {
+                if dismissOnTap {
+                    isPresented.toggle()
+                }
+                tapAction?()
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(title))
+        .accessibilityAddTraits(isTappable ? .isButton : .isStaticText)
+        .modifierIf(isTappable) { view in
+            view.accessibilityHint(Text(dismissOnTap ? "Toggles tooltip visibility." : "Activates tooltip action."))
+        }
+    }
+    
+    private var tooltipContent: some View {
+        HStack {
+            HStack(spacing: 2) {
+                icon
+                    .foregroundStyle(.white)
+                    .padding(.trailing, 2)
+                
+                Text(title)
+                    .font(.system(size: 14, weight: .semibold))
+                    .lineLimit(lineLimit)
+                    .minimumScaleFactor(0.8)
+                    .foregroundStyle(.white)
+            }
+            .padding(8)
+            .background(Color.red.opacity(0.5))
+            .cornerRadius(8)
+        }
+    }
+    
+    private var isTappable: Bool {
+        dismissOnTap || tapAction != nil
     }
     
     private var alignment: Alignment {
