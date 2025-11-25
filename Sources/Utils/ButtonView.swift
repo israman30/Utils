@@ -11,28 +11,55 @@ struct ButtonView: View {
     @State var isTapped: Bool = true
     
     var body: some View {
-        VStack {
-            ButtonViewUtils(label: "Tap here", icon: "xmark.circle") {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Buttons")
+                .font(.largeTitle.bold())
+                .accessibility(options: [
+                    .traits([.isHeader]),
+                    .labels("Buttons section")
+                ])
+            
+            ButtonViewUtils(
+                label: "Close",
+                icon: "xmark.circle",
+                accessibilityLabel: "Close view",
+                accessibilityHint: "Dismisses this screen"
+            ) {
                 // action
             }
-            .padding()
             .buttonStyle(.dangerUtil)
             
-            Button("Success") {
+            Button("Continue") {
                 // action
             }
             .utilButtonType(.primary)
+            .accessibility(options: [
+                .traits([.isButton]),
+                .labels("Continue"),
+                .hint("Moves to the next step")
+            ])
             
-            Button("Secondary") {
+            Button("Learn More") {
                 // action
             }
             .utilButtonType(.secondary)
+            .accessibility(options: [
+                .traits([.isButton]),
+                .labels("Learn more"),
+                .hint("Shows additional information")
+            ])
             
-            Button("Destructive") {
+            Button("Delete Item") {
                 // action
             }
             .utilButtonType(.destructive)
+            .accessibility(options: [
+                .traits([.isButton]),
+                .labels("Delete item"),
+                .hint("Permanently removes the item")
+            ])
         }
+        .padding()
     }
 }
 
@@ -43,11 +70,21 @@ struct ButtonView: View {
 public struct ButtonViewUtils: View {
     public let label: String
     public let icon: String?
+    public let accessibilityLabel: String?
+    public let accessibilityHint: String?
     public let action: () -> Void
     
-    public init(label: String, icon: String? = nil, action: @escaping() -> Void) {
+    public init(
+        label: String,
+        icon: String? = nil,
+        accessibilityLabel: String? = nil,
+        accessibilityHint: String? = nil,
+        action: @escaping() -> Void
+    ) {
         self.label = label
         self.icon = icon
+        self.accessibilityLabel = accessibilityLabel
+        self.accessibilityHint = accessibilityHint
         self.action = action
     }
     
@@ -58,13 +95,22 @@ public struct ButtonViewUtils: View {
             HStack(spacing: 10) {
                 if let icon = icon {
                     Image(systemName: icon)
+                        .imageScale(.large)
+                        .accessibilityHidden(true)
                 }
                 Text(label)
+                    .fontWeight(.semibold)
             }
             .font(.title2)
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity)
         }
+        .contentShape(Rectangle())
+        .accessibility(options: [
+            .traits([.isButton]),
+            .labels(accessibilityLabel ?? label),
+            .hint(accessibilityHint ?? "Activates \(label)")
+        ])
     }
 }
 
@@ -119,6 +165,9 @@ struct DangerButtonUtilsStyle: ButtonStyle {
                             .fill(Color.red.opacity(0.2))
                     }
             }
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .opacity(configuration.isPressed ? 0.9 : 1.0)
+            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }
 
@@ -137,6 +186,9 @@ struct WarningButtonUtilsStyle: ButtonStyle {
                             .fill(Color.yellow.opacity(0.2))
                     }
             }
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .opacity(configuration.isPressed ? 0.9 : 1.0)
+            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }
 
@@ -155,6 +207,9 @@ struct GrayButtonUtilsStyle: ButtonStyle {
                             .fill(Color.gray.opacity(0.2))
                     }
             }
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .opacity(configuration.isPressed ? 0.9 : 1.0)
+            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }
 
@@ -173,6 +228,9 @@ struct GreenButtonUtilsStyle: ButtonStyle {
                             .fill(Color.green.opacity(0.2))
                     }
             }
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .opacity(configuration.isPressed ? 0.9 : 1.0)
+            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }
 
@@ -191,6 +249,9 @@ struct BlueButtonUtilsStyle: ButtonStyle {
                             .fill(Color.blue.opacity(0.2))
                     }
             }
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .opacity(configuration.isPressed ? 0.9 : 1.0)
+            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }
 
@@ -209,6 +270,9 @@ struct ClearButtonUtilsStyle: ButtonStyle {
                             .fill(Color.clear.opacity(0.2))
                     }
             }
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .opacity(configuration.isPressed ? 0.9 : 1.0)
+            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }
 
@@ -237,16 +301,12 @@ public struct SystemButtonModifier: ViewModifier {
             backgroundColor = .red
             foregroundColor = .white
         }
-        if #available(iOS 16.4, *) {
-            return content
-                .padding()
-                .background(backgroundColor)
-                .foregroundStyle(foregroundColor)
-                .presentationCornerRadius(8)
-        } else {
-            // Fallback on earlier versions
-            return EmptyView()
-        }
+        return content
+            .padding()
+            .background(backgroundColor)
+            .foregroundStyle(foregroundColor)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
 }
 
