@@ -7,29 +7,40 @@
 
 import SwiftUI
 
-// MARK: - Usage View
+// MARK: - Usage View (Demo)
+// This view is for local testing/previewing accessibility behavior.
+// It does not participate in the public API of the package.
 struct AccessibilityView: View {
-    @State var value = 0.1
+    @State private var value = 0.1
     
     var body: some View {
-        Text("Accessibility View")
-            .font(.largeTitle)
-            .accessibility(options: [
-                .traits([.isHeader]),
-                .heading(level: .h1)
-            ])
-        
-        VStack {
-            Slider(value: $value)
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Accessibility View")
+                .font(.largeTitle)
+                .foregroundStyle(.primary)
                 .accessibility(options: [
-                    .labels("Value Slider"),
-                    .value("\(value)"),
-                    .hint("Drag to change value"),
-                    .behaviour(children: .ignore)
+                    .traits([.isHeader]),
+                    .heading(level: .h1)
                 ])
-            Text("\(Int(value))")
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Slider(value: $value, in: 0...1)
+                    .tint(.accentColor) // Uses system tint for high-contrast / different appearances.
+                    .accessibility(options: [
+                        .labels("Value Slider"),
+                        .value(value.formatted(.percent)),
+                        .hint("Swipe up or down to adjust the value"),
+                        .behaviour(children: .ignore)
+                    ])
+                
+                Text(value, format: .percent)
+                    .font(.title3.bold())
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+            }
+            .accessibility(options: [.behaviour(children: .combine)])
         }
-        .accessibility(options: [.behaviour(children: .combine)])
+        .padding()
     }
 }
 
@@ -38,12 +49,19 @@ struct AccessibilityView: View {
 }
 
 public enum AccessibilityOption {
+    /// Adds VoiceOver traits (e.g., `.isHeader`, `.isButton`).
     case traits([AccessibilityTraits])
+    /// Sets an accessibility label. Prefer a short noun phrase describing the element.
     case labels(_ label: String)
+    /// Sets the current value read by VoiceOver (e.g., "50 percent").
     case value(_ value: String)
+    /// Sets an accessibility hint describing how to interact with the element.
     case hint(_ hint: String)
+    /// Hides the element from accessibility.
     case accessibilityHidden
+    /// Controls how children are exposed to accessibility (combine/ignore/contain).
     case behaviour(children: AccessibilityChildBehavior)
+    /// Marks the element as a heading with a specific level.
     case heading(level: AccessibilityHeadingLevel)
 }
 
@@ -69,15 +87,17 @@ struct AccessibilityOptionModifier: ViewModifier {
         for option in options {
             switch option {
             case .labels(let labelValue):
-                label = labelValue
+                let trimmed = labelValue.trimmingCharacters(in: .whitespacesAndNewlines)
+                label = trimmed.isEmpty ? nil : trimmed
             case .value(let valueValue):
-                value = valueValue
+                let trimmed = valueValue.trimmingCharacters(in: .whitespacesAndNewlines)
+                value = trimmed.isEmpty ? nil : trimmed
             case .hint(let hintValue):
-                hint = hintValue
+                let trimmed = hintValue.trimmingCharacters(in: .whitespacesAndNewlines)
+                hint = trimmed.isEmpty ? nil : trimmed
             case .traits(let traitsValue):
                 traitSet = true
-                let traitsToAdd = traitsValue.reduce(AccessibilityTraits()) { $0.union($1) }
-                combinedTraits.formUnion(traitsToAdd)
+                traitsValue.forEach { combinedTraits.formUnion($0) }
             case .accessibilityHidden:
                 accessibilityHidden = true
             case .behaviour(let behaviourValue):
@@ -94,7 +114,6 @@ struct AccessibilityOptionModifier: ViewModifier {
         self.accessibilityHidden = accessibilityHidden
         self.behaviour = behaviour
         self.heading = heading
-        
     }
     
     func body(content: Content) -> some View {
