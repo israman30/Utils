@@ -55,6 +55,34 @@ public struct SliderControlViewUtils: View {
     public var onEditingChanged: ((Bool) -> Void)? = nil
     public var onUpdate: (() -> Void)? = nil
 
+    // MARK: - Formatting / UX helpers (internal only)
+    private static let numberFormatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.numberStyle = .decimal
+        f.maximumFractionDigits = 2
+        f.minimumFractionDigits = 0
+        return f
+    }()
+
+    private var formattedValue: String {
+        // Prefer no decimals when step is integral.
+        if step.truncatingRemainder(dividingBy: 1) == 0,
+           value.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(Int(value))
+        }
+        return Self.numberFormatter.string(from: NSNumber(value: value)) ?? "\(value)"
+    }
+
+    private var formattedMin: String {
+        if min.truncatingRemainder(dividingBy: 1) == 0 { return String(Int(min)) }
+        return Self.numberFormatter.string(from: NSNumber(value: min)) ?? "\(min)"
+    }
+
+    private var formattedMax: String {
+        if max.truncatingRemainder(dividingBy: 1) == 0 { return String(Int(max)) }
+        return Self.numberFormatter.string(from: NSNumber(value: max)) ?? "\(max)"
+    }
+
     // MARK: - Init
     public init(
         value: Binding<Double>,
@@ -94,67 +122,144 @@ public struct SliderControlViewUtils: View {
 
     // MARK: - View
     public var body: some View {
-        HStack(spacing: 12) {
-            if let minIcon {
-                Button(action: {
-                    minTapAction?()
-                }) {
-                    Image(systemName: minIcon)
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundColor(isEnabled ? .accentColor : .gray)
-                        .accessibilityLabel(minimumValueLabel ?? "Minimum")
-                }
-                .disabled(!isEnabled)
+        HStack(spacing: 16) {
+            minButton
+            sliderWithLabels
+            maxButton
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(Color(.secondarySystemBackground))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .strokeBorder(Color.primary.opacity(0.05))
+        )
+        .accessibilityElement(children: .contain)
+    }
+
+    @ViewBuilder
+    private var minButton: some View {
+        if let minIcon {
+            Button(action: { minTapAction?() }) {
+                Image(systemName: minIcon)
+                    .font(.title3.weight(.semibold))
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(isEnabled ? Color.gray : Color.secondary)
+                    .frame(width: 44, height: 44)
+                    .background(
+                        Circle()
+                            .fill(.thinMaterial)
+                            .opacity(isEnabled ? 1 : 0.5)
+                    )
+                    .contentShape(Circle())
             }
-            VStack(alignment: .leading, spacing: 4) {
+            .buttonStyle(.plain)
+            .disabled(!isEnabled)
+            .accessibilityLabel(minimumValueLabel ?? "Decrease")
+            .accessibilityHint(minimumValueLabel != nil ? "Sets to \(minimumValueLabel!)" : "Decreases the value")
+        }
+    }
+
+    private var sliderWithLabels: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .firstTextBaseline) {
                 if let label {
                     Text(label)
-                        .font(.caption).foregroundColor(.secondary)
+                        .font(.footnote.weight(.medium))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
                         .accessibilityHidden(true)
                 }
-                Slider(
-                    value: Binding<Double>(
-                        get: { value },
-                        set: { newValue in
-                            let setValue = Swift.max(Swift.min(newValue, max), min)
-                            value = setValue
-                            onUpdate?()
-                        }),
-                    in: min...max,
-                    step: step,
-                    onEditingChanged: onEditingChanged ?? { _ in })
-                .disabled(!isEnabled)
-                .accessibilityLabel(accessibilityLabel ?? label ?? "Slider")
-                .accessibilityValue("\(Int(value))")
-                .accessibilityHint(accessibilityHint)
-                .accessibilityAdjustableAction { direction in
-                    switch direction {
-                    case .increment: value = Swift.min(value + step, max); onUpdate?()
-                    case .decrement: value = Swift.max(value - step, min); onUpdate?()
-                    default: break
-                    }
-                }
-                HStack {
-                    if let minimumValueLabel { Text(minimumValueLabel).font(.caption2).foregroundColor(.secondary) }
-                    Spacer()
-                    if let maximumValueLabel { Text(maximumValueLabel).font(.caption2).foregroundColor(.secondary) }
+
+                Spacer(minLength: 8)
+
+                Text(formattedValue)
+                    .font(.footnote.monospacedDigit())
+                    .foregroundStyle(isEnabled ? .primary : .secondary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        Capsule()
+                            .fill(isEnabled ? Color.accentColor.opacity(0.12) : Color.secondary.opacity(0.12))
+                    )
+                    .accessibilityHidden(true)
+            }
+
+            Slider(
+                value: Binding<Double>(
+                    get: { value },
+                    set: { newValue in
+                        let setValue = Swift.max(Swift.min(newValue, max), min)
+                        value = setValue
+                        onUpdate?()
+                    }),
+                in: min...max,
+                step: step,
+                onEditingChanged: onEditingChanged ?? { _ in }
+            )
+            .tint(isEnabled ? .accentColor : .gray)
+            .disabled(!isEnabled)
+            .accessibilityLabel(accessibilityLabel ?? label ?? "Slider")
+            .accessibilityValue("\(formattedValue) of \(formattedMax)")
+            .accessibilityHint(accessibilityHint.isEmpty ? "Adjustable between \(formattedMin) and \(formattedMax)" : accessibilityHint)
+            .accessibilityAdjustableAction { direction in
+                switch direction {
+                case .increment:
+                    value = Swift.min(value + step, max)
+                    onUpdate?()
+                case .decrement:
+                    value = Swift.max(value - step, min)
+                    onUpdate?()
+                default:
+                    break
                 }
             }
-            if let maxIcon {
-                Button(action: {
-                    maxTapAction?()
-                }) {
-                    Image(systemName: maxIcon)
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundColor(isEnabled ? .accentColor : .gray)
-                        .accessibilityLabel(maximumValueLabel ?? "Maximum")
+
+            HStack {
+                if let minimumValueLabel {
+                    Text(minimumValueLabel)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .accessibilityHidden(true)
                 }
-                .disabled(!isEnabled)
+                Spacer()
+                if let maximumValueLabel {
+                    Text(maximumValueLabel)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .accessibilityHidden(true)
+                }
             }
         }
-        .padding()
+    }
+
+    @ViewBuilder
+    private var maxButton: some View {
+        if let maxIcon {
+            Button(action: { maxTapAction?() }) {
+                Image(systemName: maxIcon)
+                    .font(.title3.weight(.semibold))
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(isEnabled ? Color.gray : Color.secondary)
+                    .frame(width: 44, height: 44)
+                    .background(
+                        Circle()
+                            .fill(.thinMaterial)
+                            .opacity(isEnabled ? 1 : 0.5)
+                    )
+                    .contentShape(Circle())
+            }
+            .buttonStyle(.plain)
+            .disabled(!isEnabled)
+            .accessibilityLabel(maximumValueLabel ?? "Increase")
+            .accessibilityHint(maximumValueLabel != nil ? "Sets to \(maximumValueLabel!)" : "Increases the value")
+        }
     }
 }
-
