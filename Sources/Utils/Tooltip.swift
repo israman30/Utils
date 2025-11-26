@@ -14,18 +14,18 @@ struct TooltipView: View {
         VStack(spacing: 50) {
             TooltipUtils("Label")
             
-            TooltipUtils("Label 2") {
+            TooltipUtils("Label 2", icon: {
                 Image(systemName: "heart.fill")
-            }
+            })
             
-            TooltipUtils("12", type: .left) {
+            TooltipUtils("12", type: .left, icon: {
                 Image(systemName: "bubble.fill")
-            }
+            })
             
             HStack {
-                TooltipUtils("12", type: .right) {
+                TooltipUtils("12", type: .right, icon: {
                     Image(systemName: "bubble.fill")
-                }
+                })
                 Text("Some text here")
                     .padding()
                     .foregroundStyle(.white)
