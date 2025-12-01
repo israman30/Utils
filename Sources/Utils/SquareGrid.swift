@@ -64,10 +64,29 @@ public struct SquareGridView<Content: View, Item: Hashable>: View {
     func adaptiveColumns(_ cellSize: CGFloat) -> [GridItem] {
         .init(repeating:  GridItem(.fixed(cellSize), spacing: columnSpacing), count: columns)
     }
+
+    @ViewBuilder
+    func cellContainer(for item: Item, height: CGFloat, @ViewBuilder content: () -> some View) -> some View {
+        content()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(10)
+            .frame(height: height)
+            .background(Color(uiColor: .secondarySystemBackground))
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(Color(uiColor: .separator).opacity(0.35), lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .shadow(color: Color.black.opacity(0.14), radius: 6, x: 0, y: 3)
+            .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(itemAccessibilityLabel?(item) ?? "Grid item")
+    }
     
     public var body: some View {
         GeometryReader { proxy in
-            let cellWidth: CGFloat = proxy.size.width / CGFloat(columns)
+            let totalSpacing = CGFloat(max(columns - 1, 0)) * columnSpacing
+            let cellWidth: CGFloat = (proxy.size.width - totalSpacing) / CGFloat(columns)
             let cellHeight: CGFloat = cellAspectRatio.map { cellWidth * $0 } ?? cellWidth
             ScrollView(.vertical, showsIndicators: showsIndicators) {
                 LazyVGrid(
@@ -75,51 +94,79 @@ public struct SquareGridView<Content: View, Item: Hashable>: View {
                     spacing: rowSpacing
                 ) {
                     ForEach(items, id: \.self) { item in
-                        buildItem(item)
-                            .frame(height: cellHeight)
-                            .accessibilityElement()
-                            .accessibilityLabel(itemAccessibilityLabel?(item) ?? "Grid item")
+                        cellContainer(for: item, height: cellHeight) {
+                            buildItem(item)
+                                .foregroundStyle(.primary)
+                        }
                     }
                 }
                 .accessibilityElement(children: .contain)
-                .accessibilityLabel(accessibilityLabel ?? "Grid" )
+                .accessibilityLabel(accessibilityLabel ?? "Grid")
             }
         }
     }
 }
 
+#if DEBUG
 @MainActor
-class SomeModel: ObservableObject {
-    @Published var characters: [Character] = []
-    @Published var totalCount: Int = 50
+final class SomeModel: ObservableObject {
+    @Published var items: [String] = []
+    @Published var totalCount: Int = 0
+    @Published var isLoading = false
     
     func loadMoreCharacters() {
-        let newCharacters = Array("ABCDEFGHIJKLMOPQRSTUVWXYZ")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.characters = newCharacters
-            self.totalCount += newCharacters.count
+        guard !isLoading else { return }
+        isLoading = true
+        
+        let newItems = Array("ABCDEFGHIJKLMOPQRSTUVWXYZ").map(String.init)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.items = newItems
+            self.totalCount = newItems.count
+            self.isLoading = false
         }
     }
 }
 
 // MARK: - Usage View
 struct GridTextView: View {
-    @StateObject var model = SomeModel()
+    @StateObject private var model = SomeModel()
+    
+    private var displayItems: [String] {
+        model.isLoading ? Array(repeating: "Loading", count: 9) : model.items
+    }
+    
     var body: some View {
         SquareGridView(
-            items: model.characters,
+            items: displayItems,
             totalCount: model.totalCount,
             columns: 3,
-            columnSpacing: 2,
-            rowSpacing: 2,
+            columnSpacing: 10,
+            rowSpacing: 10,
             showsIndicators: true,
-            cellAspectRatio: nil,
-            accessibilityLabel: nil,
-            itemAccessibilityLabel: nil,
+            cellAspectRatio: 1,
+            accessibilityLabel: "Square grid",
+            itemAccessibilityLabel: { item in
+                model.isLoading ? "Loading item" : "Item \(item)"
+            },
             buildItem: { item in
-                Text(String("Item: \(item)"))
+                VStack(spacing: 8) {
+                    Image(systemName: "square.grid.2x2.fill")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundStyle(Color(uiColor: .tintColor))
+                    
+                    Text(item)
+                        .font(.callout.weight(.semibold))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .redacted(reason: model.isLoading ? .placeholder : [])
+                .accessibilityHidden(model.isLoading)
             }
         )
+        .padding()
+        .background(Color(uiColor: .systemBackground))
         .onAppear {
             model.loadMoreCharacters()
         }
@@ -129,3 +176,5 @@ struct GridTextView: View {
 #Preview(body: {
     GridTextView()
 })
+#endif
+
