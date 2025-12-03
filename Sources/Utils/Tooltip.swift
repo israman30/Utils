@@ -94,12 +94,12 @@ public struct TooltipUtils<Icon: View>: View {
     
     public var body: some View {
         ZStack(alignment: alignment) {
-            if isPresented || !dismissOnTap {
+            if isVisible {
                 tooltipContent
                     .transition(.opacity.combined(with: .scale(scale: 0.95)))
             }
             
-            if isPresented || !dismissOnTap {
+            if isVisible {
                 switch type {
                 case .top:
                     triangle()
@@ -124,41 +124,59 @@ public struct TooltipUtils<Icon: View>: View {
         .contentShape(Rectangle())
         .modifierIf(isTappable) { view in
             view.onTapGesture {
-                if dismissOnTap {
-                    isPresented.toggle()
-                }
-                tapAction?()
+                handleTap()
             }
         }
+        .modifierIf(isTappable) { view in
+            view.accessibilityAction {
+                handleTap()
+            }
+        }
+        .accessibilityHidden(!isVisible)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(title))
         .accessibilityAddTraits(isTappable ? .isButton : .isStaticText)
         .modifierIf(isTappable) { view in
-            view.accessibilityHint(Text(dismissOnTap ? "Toggles tooltip visibility." : "Activates tooltip action."))
+            view.accessibilityHint(Text(dismissOnTap ? "Dismisses tooltip." : "Activates tooltip action."))
         }
     }
     
     private var tooltipContent: some View {
-        HStack {
-            HStack(spacing: 2) {
+        HStack(spacing: 6) {
+            if showsIcon {
                 icon
                     .foregroundStyle(.white)
-                    .padding(.trailing, 2)
-                
-                Text(title)
-                    .font(.system(size: 14, weight: .semibold))
-                    .lineLimit(lineLimit)
-                    .minimumScaleFactor(0.8)
-                    .foregroundStyle(.white)
+                    .accessibilityHidden(true)
             }
-            .padding(8)
-            .background(Color.red.opacity(0.5))
-            .cornerRadius(8)
+            
+            Text(title)
+                .font(.system(size: 14, weight: .semibold))
+                .lineLimit(lineLimit)
+                .minimumScaleFactor(0.8)
+                .foregroundStyle(.white)
         }
+        .padding(8)
+        .background(Color.red.opacity(0.5))
+        .cornerRadius(8)
     }
     
     private var isTappable: Bool {
         dismissOnTap || tapAction != nil
+    }
+
+    private var isVisible: Bool {
+        isPresented || !dismissOnTap
+    }
+    
+    private var showsIcon: Bool {
+        Icon.self != EmptyView.self
+    }
+    
+    private func handleTap() {
+        if dismissOnTap {
+            isPresented.toggle()
+        }
+        tapAction?()
     }
     
     private var alignment: Alignment {

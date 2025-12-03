@@ -1,0 +1,460 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.Utils-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/sources",
+      "importPath" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Accessibility.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/ButtonView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/FloatingButton.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Form.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Grid.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Picker.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/RatingHearts.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/RatingStar.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/SliderControl.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/SquareGrid.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Stepper.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/TextFieldView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Toast.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Toggle.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Tooltip.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Utils.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "Utils",
+      "moduleOutputPath" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Modules/Utils.swiftmodule",
+      "objects" : [
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Accessibility.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/ButtonView.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/FloatingButton.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Form.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Grid.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Picker.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingHearts.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingStar.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SliderControl.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SquareGrid.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Stepper.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/TextFieldView.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toast.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toggle.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Tooltip.swift.o",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Utils.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/include/Utils-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "utils"
+      ],
+      "outputFileMapPath" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Accessibility.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/ButtonView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/FloatingButton.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Form.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Grid.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Picker.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingHearts.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingStar.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SliderControl.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SquareGrid.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Stepper.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/TextFieldView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toast.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toggle.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Tooltip.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Utils.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Modules/Utils.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Accessibility.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/ButtonView.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/FloatingButton.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Form.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Grid.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Picker.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/RatingHearts.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/RatingStar.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/SliderControl.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/SquareGrid.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Stepper.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/TextFieldView.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Toast.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Toggle.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Tooltip.swift",
+        "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Utils.swift"
+      ],
+      "tempsPath" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "Utils" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "Utils",
+      "-package-name",
+      "utils",
+      "-c",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Accessibility.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/ButtonView.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/FloatingButton.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Form.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Grid.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Picker.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/RatingHearts.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/RatingStar.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/SliderControl.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/SquareGrid.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Stepper.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/TextFieldView.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Toast.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Toggle.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Tooltip.swift",
+      "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Utils.swift",
+      "-I",
+      "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/include/Utils-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "utils",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "Utils" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Accessibility.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/ButtonView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/FloatingButton.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Form.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Grid.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Picker.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/RatingHearts.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/RatingStar.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/SliderControl.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/SquareGrid.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Stepper.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/TextFieldView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Toast.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Toggle.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Tooltip.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Utils.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/sources"
+    },
+    "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}
