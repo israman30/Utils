@@ -266,6 +266,7 @@ private struct HeartLikeViewAnimationSamples: View {
     @State private var defaultLiked = false
     @State private var splashOnlyLiked = false
     @State private var bounceOnlyLiked = false
+    @State private var waterSpringLiked = false
     @State private var minimalLiked = false
     
     var body: some View {
@@ -300,17 +301,34 @@ private struct HeartLikeViewAnimationSamples: View {
                 }
                 
                 sampleRow(
-                    title: "Bounce only",
-                    description: "Quick bounce without the burst ring/particles.",
+                    title: "Bounce with red drops",
+                    description: "Bounce animation plus red splash particles.",
                     isLiked: $bounceOnlyLiked
                 ) {
                     HeartLikeView(
                         isLiked: $bounceOnlyLiked,
                         size: 90,
-                        likedColor: .purple,
+                        likedColor: .red,
                         unlikedColor: .gray.opacity(0.7),
-                        showsSplash: false,
+                        splashColor: .red,
+                        showsSplash: true,
                         showsBounce: true
+                    )
+                }
+                
+                sampleRow(
+                    title: "Water spring drops",
+                    description: "Springy blue splash that feels like water droplets.",
+                    isLiked: $waterSpringLiked
+                ) {
+                    HeartLikeView(
+                        isLiked: $waterSpringLiked,
+                        size: 90,
+                        likedColor: .cyan,
+                        unlikedColor: .blue.opacity(0.35),
+                        splashColor: .cyan,
+                        bounceScale: 1.3,
+                        bounceSpring: .interpolatingSpring(stiffness: 260, damping: 14)
                     )
                 }
                 
