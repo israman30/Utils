@@ -12,6 +12,8 @@ import SwiftUI
 // It does not participate in the public API of the package.
 struct AccessibilityView: View {
     @State private var value = 0.1
+    @State private var name = ""
+    @State private var isEnabled = true
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -22,23 +24,56 @@ struct AccessibilityView: View {
                     .traits([.isHeader]),
                     .heading(level: .h1)
                 ])
-            
-            VStack(alignment: .leading, spacing: 8) {
-                Slider(value: $value, in: 0...1)
-                    .tint(.accentColor) // Uses system tint for high-contrast / different appearances.
+
+            VStack(alignment: .leading, spacing: 12) {
+                // Slider sample
+                VStack(alignment: .leading, spacing: 8) {
+                    Slider(value: $value, in: 0...1)
+                        .tint(.accentColor)
+                        .accessibility(options: [
+                            .labels("Value Slider"),
+                            .value(value.formatted(.percent)),
+                            .hint("Swipe up or down to adjust the value"),
+                            .behaviour(children: .ignore)
+                        ])
+                    
+                    Text(value, format: .percent)
+                        .font(.title3.bold())
+                        .foregroundStyle(.secondary)
+                        .accessibilityHidden(true)
+                }
+                .accessibility(options: [.behaviour(children: .combine)])
+
+                // Button sample
+                Button {
+                    isEnabled.toggle()
+                } label: {
+                    Label(isEnabled ? "Enabled" : "Disabled", systemImage: isEnabled ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        .foregroundStyle(isEnabled ? .green : .red)
+                }
+                .accessibility(options: [
+                    .labels("Toggle status"),
+                    .hint("Double-tap to toggle between enabled and disabled"),
+                    .traits([.isButton])
+                ])
+
+                // TextField sample
+                TextField("Enter your name", text: $name)
+                    .textFieldStyle(.roundedBorder)
                     .accessibility(options: [
-                        .labels("Value Slider"),
-                        .value(value.formatted(.percent)),
-                        .hint("Swipe up or down to adjust the value"),
-                        .behaviour(children: .ignore)
+                        .labels("Name input"),
+                        .value(name.isEmpty ? "Empty" : name),
+                        .hint("Type your name; VoiceOver reads current text")
                     ])
-                
-                Text(value, format: .percent)
-                    .font(.title3.bold())
-                    .foregroundStyle(.secondary)
-                    .accessibilityHidden(true)
+
+                // Static text sample
+                Text("This paragraph is intentionally longer to show how labels can differ from visible text.")
+                    .accessibility(options: [
+                        .labels("Help text about labels differing from visible text"),
+                        .hint("VoiceOver reads the concise label instead of the full sentence")
+                    ])
             }
-            .accessibility(options: [.behaviour(children: .combine)])
+            .padding(.top, 8)
         }
         .padding()
     }
