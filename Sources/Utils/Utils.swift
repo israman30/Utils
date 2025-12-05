@@ -260,8 +260,110 @@ public struct HeartLikeView: View {
     }
 }
 
-#Preview {
-    HeartLikeView(isLiked: .constant(false))
+// MARK: - Samples / Previews
+
+private struct HeartLikeViewAnimationSamples: View {
+    @State private var defaultLiked = false
+    @State private var splashOnlyLiked = false
+    @State private var bounceOnlyLiked = false
+    @State private var minimalLiked = false
+    
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                sampleRow(
+                    title: "Default (splash + bounce)",
+                    description: "Shows both the Instagram-style burst and bounce.",
+                    isLiked: $defaultLiked
+                ) {
+                    HeartLikeView(
+                        isLiked: $defaultLiked,
+                        size: 90,
+                        likedColor: .red,
+                        unlikedColor: .gray
+                    )
+                }
+                
+                sampleRow(
+                    title: "Splash only",
+                    description: "Burst animation without bounce.",
+                    isLiked: $splashOnlyLiked
+                ) {
+                    HeartLikeView(
+                        isLiked: $splashOnlyLiked,
+                        size: 90,
+                        likedColor: .pink,
+                        unlikedColor: .gray.opacity(0.7),
+                        showsSplash: true,
+                        showsBounce: false
+                    )
+                }
+                
+                sampleRow(
+                    title: "Bounce only",
+                    description: "Quick bounce without the burst ring/particles.",
+                    isLiked: $bounceOnlyLiked
+                ) {
+                    HeartLikeView(
+                        isLiked: $bounceOnlyLiked,
+                        size: 90,
+                        likedColor: .purple,
+                        unlikedColor: .gray.opacity(0.7),
+                        showsSplash: false,
+                        showsBounce: true
+                    )
+                }
+                
+                sampleRow(
+                    title: "Minimal (no bounce or splash)",
+                    description: "Simple fill transition for low-motion contexts.",
+                    isLiked: $minimalLiked
+                ) {
+                    HeartLikeView(
+                        isLiked: $minimalLiked,
+                        size: 90,
+                        likedColor: .green,
+                        unlikedColor: .gray.opacity(0.7),
+                        showsSplash: false,
+                        showsBounce: false
+                    )
+                }
+            }
+            .padding(20)
+        }
+    }
+    
+    private func sampleRow<Content: View>(
+        title: String,
+        description: String,
+        isLiked: Binding<Bool>,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        HStack(spacing: 16) {
+            content()
+                .frame(width: 100, height: 100)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.headline)
+                Text(description)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Toggle(isOn: isLiked) {
+                    Text(isLiked.wrappedValue ? "Liked" : "Not liked")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+                .accessibilityLabel(Text("\(title) toggle"))
+            }
+        }
+    }
+}
+
+#Preview("HeartLikeView Animations") {
+    HeartLikeViewAnimationSamples()
 }
 
 private struct HeartForegroundModifier: ViewModifier {
