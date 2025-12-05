@@ -73,6 +73,8 @@ public struct TooltipUtils<Icon: View>: View {
     public var dismissOnTap: Bool
     public var lineLimit: Int?
     public var tapAction: (() -> Void)?
+    public var labelColor: Color
+    public var backgroundColor: Color
     
     @State private var isPresented: Bool = true
     
@@ -82,6 +84,8 @@ public struct TooltipUtils<Icon: View>: View {
         dismissOnTap: Bool = false,
         lineLimit: Int? = 1,
         tapAction: (() -> Void)? = nil,
+        labelColor: Color = .white,
+        backgroundColor: Color = .red.opacity(0.5),
         @ViewBuilder icon: () -> Icon = EmptyView.init
     ) {
         self.title = title
@@ -89,6 +93,8 @@ public struct TooltipUtils<Icon: View>: View {
         self.dismissOnTap = dismissOnTap
         self.lineLimit = lineLimit
         self.tapAction = tapAction
+        self.labelColor = labelColor
+        self.backgroundColor = backgroundColor
         self.icon = icon()
     }
     
@@ -145,7 +151,7 @@ public struct TooltipUtils<Icon: View>: View {
         HStack(spacing: 6) {
             if showsIcon {
                 icon
-                    .foregroundStyle(.white)
+                    .foregroundStyle(labelColor)
                     .accessibilityHidden(true)
             }
             
@@ -153,10 +159,10 @@ public struct TooltipUtils<Icon: View>: View {
                 .font(.system(size: 14, weight: .semibold))
                 .lineLimit(lineLimit)
                 .minimumScaleFactor(0.8)
-                .foregroundStyle(.white)
+                .foregroundStyle(labelColor)
         }
         .padding(8)
-        .background(Color.red.opacity(0.5))
+        .background(backgroundColor)
         .cornerRadius(8)
     }
     
@@ -194,7 +200,7 @@ public struct TooltipUtils<Icon: View>: View {
     
     private func triangle() -> some View {
         Triangle()
-            .fill(Color.red.opacity(0.5))
+            .fill(backgroundColor)
             .frame(width: 20, height: 10)
     }
 
