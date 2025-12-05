@@ -2,6 +2,9 @@
 // https://docs.swift.org/swift-book
 
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 public struct HeartLikeView: View {
     
@@ -14,6 +17,7 @@ public struct HeartLikeView: View {
     private let likedColor: Color
     private let unlikedColor: Color
     private let splashColor: Color
+    private let fillColor: Color
     private let showsSplash: Bool
     private let showsBounce: Bool
     private let bounceScale: CGFloat
@@ -23,6 +27,11 @@ public struct HeartLikeView: View {
     // MARK: - Animation state
     @State private var isAnimating = false
     @State private var scale: CGFloat = 1
+    @State private var bounceRotation: Double = 0
+    @State private var bounceOffset: CGFloat = 0
+    @State private var fillProgress: CGFloat = 0
+    @State private var backgroundOpacity: Double = 0
+    @State private var backgroundScale: CGFloat = 0.85
     @State private var splashTrigger: Int = 0
     
     /// A reusable toggleable heart button with optional bounce + Instagram-style splash.
@@ -43,6 +52,7 @@ public struct HeartLikeView: View {
         likedColor: Color = .red,
         unlikedColor: Color = .gray,
         splashColor: Color? = nil,
+        fillColor: Color? = nil,
         showsSplash: Bool = true,
         showsBounce: Bool = true,
         bounceScale: CGFloat = 1.25,
@@ -54,6 +64,7 @@ public struct HeartLikeView: View {
         self.likedColor = likedColor
         self.unlikedColor = unlikedColor
         self.splashColor = splashColor ?? likedColor
+        self.fillColor = fillColor ?? likedColor
         self.showsSplash = showsSplash
         self.showsBounce = showsBounce
         self.bounceScale = bounceScale
@@ -64,6 +75,8 @@ public struct HeartLikeView: View {
     public var body: some View {
         Button(action: toggle) {
             ZStack {
+                animatedBackground
+
                 if isLiked, showsSplash, !reduceMotion {
                     InstagramLikeSplash(
                         color: splashColor,
@@ -85,6 +98,9 @@ public struct HeartLikeView: View {
         .accessibilityHint(Text("Double-tap to \(isLiked ? "unlike" : "like")"))
         .accessibilityAddTraits(.isButton)
         .accessibilityAddTraits(isLiked ? .isSelected : [])
+        .onAppear {
+            syncVisualState(animated: false)
+        }
     }
     
     private func toggle() {
@@ -92,7 +108,9 @@ public struct HeartLikeView: View {
         
         if reduceMotion {
             isLiked.toggle()
+            syncVisualState(animated: false)
             triggerHapticFeedbackIfNeeded()
+            announceAccessibilityChange()
             return
         }
         
@@ -105,20 +123,11 @@ public struct HeartLikeView: View {
             splashTrigger &+= 1
         }
         
-        if showsBounce {
-            scale = 1
-            withAnimation(bounceSpring) {
-                scale = bounceScale
-            }
-            // Return to rest with a slightly softer spring.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
-                withAnimation(.interpolatingSpring(stiffness: 260, damping: 22)) {
-                    scale = 1
-                }
-            }
-        }
+        syncVisualState(animated: true)
+        performBounce()
         
         triggerHapticFeedbackIfNeeded()
+        announceAccessibilityChange()
         
         // Lock rapid re-taps for the approximate animation window.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
@@ -128,18 +137,24 @@ public struct HeartLikeView: View {
 
     @ViewBuilder
     private var heartImage: some View {
-        Image(systemName: isLiked ? "heart.fill" : "heart")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .scaleEffect(scale)
-            .modifier(
-                HeartForegroundModifier(
-                    isLiked: isLiked,
-                    likedColor: likedColor,
-                    unlikedColor: unlikedColor
+        ZStack {
+            Image(systemName: "heart")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .modifier(
+                    HeartForegroundModifier(
+                        isLiked: isLiked,
+                        likedColor: likedColor,
+                        unlikedColor: unlikedColor
+                    )
                 )
-            )
-            .accessibilityHidden(true)
+            
+            fillingHeart
+        }
+        .scaleEffect(scale)
+        .rotationEffect(.degrees(bounceRotation))
+        .offset(y: bounceOffset)
+        .accessibilityHidden(true)
     }
 
     private func triggerHapticFeedbackIfNeeded() {
@@ -153,6 +168,95 @@ public struct HeartLikeView: View {
             feedbackGenerator.impactOccurred()
         }
 #endif
+    }
+
+    private func performBounce() {
+        guard showsBounce else { return }
+        
+        scale = 1
+        bounceOffset = 0
+        bounceRotation = 0
+        
+        withAnimation(bounceSpring) {
+            scale = bounceScale
+            bounceOffset = -size * 0.08
+            bounceRotation = isLiked ? -4 : 4
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.14) {
+            withAnimation(.interpolatingSpring(stiffness: 340, damping: 20)) {
+                scale = 0.94
+                bounceOffset = size * 0.045
+                bounceRotation = 0
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.26) {
+            withAnimation(.interpolatingSpring(stiffness: 260, damping: 22)) {
+                scale = 1
+                bounceOffset = 0
+            }
+        }
+    }
+    
+    private func syncVisualState(animated: Bool) {
+        let targetProgress: CGFloat = isLiked ? 1 : 0
+        let targetOpacity: Double = isLiked ? 0.25 : 0
+        let targetScale: CGFloat = isLiked ? 1.08 : 0.8
+        
+        if reduceMotion || !animated {
+            fillProgress = targetProgress
+            backgroundOpacity = targetOpacity
+            backgroundScale = targetScale
+            return
+        }
+        
+        withAnimation(.easeOut(duration: 0.32)) {
+            fillProgress = targetProgress
+        }
+        
+        withAnimation(.spring(response: 0.48, dampingFraction: 0.72, blendDuration: 0.08)) {
+            backgroundOpacity = targetOpacity
+            backgroundScale = isLiked ? 1.18 : 0.82
+        }
+        
+        if isLiked {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.24) {
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.85)) {
+                    backgroundScale = 1.0
+                }
+            }
+        }
+    }
+    
+    private func announceAccessibilityChange() {
+#if canImport(UIKit)
+        let announcement = isLiked ? "Marked as liked." : "Marked as not liked."
+        UIAccessibility.post(notification: .announcement, argument: announcement)
+#endif
+    }
+    
+    private var animatedBackground: some View {
+        let tint = isLiked ? fillColor : unlikedColor
+        return Circle()
+            .fill(tint.opacity(0.22))
+            .frame(width: size * 1.35, height: size * 1.35)
+            .scaleEffect(backgroundScale)
+            .opacity(backgroundOpacity)
+            .accessibilityHidden(true)
+    }
+    
+    private var fillingHeart: some View {
+        Rectangle()
+            .fill(fillColor)
+            .mask(
+                Image(systemName: "heart.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            )
+            .scaleEffect(y: max(0.0001, fillProgress), anchor: .bottom)
+            .animation(.easeOut(duration: 0.32), value: fillProgress)
+            .accessibilityHidden(true)
     }
 }
 
