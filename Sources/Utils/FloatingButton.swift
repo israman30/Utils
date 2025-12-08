@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Enum for possible shapes of the Floating Button
-public enum FloatingButtonShape {
+public enum FloatingButtonShape: Sendable {
     case circle, capsule, roundedRectangle(CGFloat)
 }
 
@@ -95,6 +95,21 @@ private struct ShapeModifier: ViewModifier {
     }
 }
 
+// Shared shape container to allow overlays that match the chosen shape
+private struct FloatingButtonShapeContainer: Shape {
+    let shape: FloatingButtonShape
+    func path(in rect: CGRect) -> Path {
+        switch shape {
+        case .circle:
+            return Circle().path(in: rect)
+        case .capsule:
+            return Capsule().path(in: rect)
+        case .roundedRectangle(let radius):
+            return RoundedRectangle(cornerRadius: radius).path(in: rect)
+        }
+    }
+}
+
 // Conditional modifier utility
 fileprivate extension View {
     @ViewBuilder
@@ -140,6 +155,104 @@ public struct FloatingButtonUtilsView: View {
             alignment: alignment,
             action: action
         )
+    }
+}
+
+// MARK: - Glass style floating button
+
+/// Floating button with a glassmorphic background that adapts to accessibility settings.
+public struct GlassFloatingButton: View {
+    public var icon: String? = "plus"
+    public var text: String? = nil
+    public var tint: Color = .white
+    public var action: () -> Void
+    public var alignment: AlignmentFloatingButton = .trailing
+    public var shape: FloatingButtonShape = .capsule
+    public var accessibilityLabel: String? = nil
+    
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    
+    public init(
+        icon: String? = "plus",
+        text: String? = nil,
+        tint: Color = .white,
+        alignment: AlignmentFloatingButton = .trailing,
+        shape: FloatingButtonShape = .capsule,
+        accessibilityLabel: String? = nil,
+        action: @escaping () -> Void
+    ) {
+        self.icon = icon
+        self.text = text
+        self.tint = tint
+        self.alignment = alignment
+        self.shape = shape
+        self.accessibilityLabel = accessibilityLabel
+        self.action = action
+    }
+    
+    public var body: some View {
+        ZStack {
+            VStack {
+                Spacer()
+                HStack {
+                    if alignment == .trailing { Spacer(); button } else { button; Spacer() }
+                }
+            }
+        }
+    }
+    
+    private var button: some View {
+        Button(action: action) {
+            HStack(spacing: 10) {
+                if let icon = icon {
+                    Image(systemName: icon)
+                        .font(.headline.weight(.semibold))
+                }
+                if let text = text {
+                    Text(text)
+                        .font(.headline)
+                }
+            }
+            .foregroundColor(tint)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(glassBackground)
+            .modifier(ShapeModifier(shape: shape))
+            .overlay(glassStroke)
+            .shadow(color: tint.opacity(0.25), radius: 12, x: 0, y: 8)
+        }
+        .accessibilityLabel(accessibilityLabel ?? (text ?? icon ?? "Glass Floating Button"))
+        .accessibilityAddTraits(.isButton)
+        .padding()
+    }
+    
+    private var glassBackground: some View {
+        Group {
+#if os(iOS)
+            if reduceTransparency {
+                Color(uiColor: .secondarySystemBackground)
+            } else {
+                // Use .ultraThinMaterial for iOS 15+
+                if #available(iOS 15.0, *) {
+                    Color.clear.background(.ultraThinMaterial)
+                } else {
+                    Color.white.opacity(0.85)
+                }
+            }
+#else
+            // On macOS or other platforms, fallback
+            if reduceTransparency {
+                Color.gray.opacity(0.15)
+            } else {
+                Color.clear.background(.regularMaterial)
+            }
+#endif
+        }
+    }
+    
+    private var glassStroke: some View {
+        FloatingButtonShapeContainer(shape: shape)
+            .stroke(Color.white.opacity(reduceTransparency ? 0.35 : 0.55), lineWidth: 1)
     }
 }
 
@@ -223,6 +336,18 @@ private struct FloatingButtonShowcase: View {
                 }
                 
                 FloatingButtonSampleCard(
+                    title: "Glass style",
+                    description: "Adaptive glassmorphic background that respects accessibility."
+                ) {
+                    GlassFloatingButton(
+                        icon: "sparkles",
+                        text: "New note",
+                        tint: .white,
+                        shape: .capsule
+                    ) { print("Glass tapped") }
+                }
+                
+                FloatingButtonSampleCard(
                     title: "Text-only pill",
                     description: "Remove the icon to create a floating call-to-action pill."
                 ) {
@@ -257,4 +382,3 @@ private struct FloatingButtonShowcase: View {
 #Preview("FloatingButton Showcase") {
     FloatingButtonShowcase()
 }
-
