@@ -90,23 +90,64 @@ ToastView(
 )
 ```
 
-### FloatingButtonUtilsView
+### FloatingButton
 
-Floating action button that can be positioned on screen.
+Floating action button with icon/text support, multiple shapes, and alignment.
 
 ```swift
-FloatingButtonUtilsView(
-    alignment: .trailing,
-    color: .blue,
-    icon: "plus"
+// Icon-only primary action (default circle, trailing)
+FloatingButton {
+    // Primary action
+}
+
+// Label + icon capsule
+FloatingButton(
+    icon: "square.and.pencil",
+    text: "Compose",
+    color: .purple,
+    textColor: .white,
+    shape: .capsule
 ) {
-    // Your action here
+    // Compose action
+}
+
+// Leading, minimal shadow, rounded rectangle
+FloatingButton(
+    icon: "chevron.left",
+    text: "Back",
+    color: .gray.opacity(0.9),
+    textColor: .white,
+    alignment: .leading,
+    shape: .roundedRectangle(14),
+    shadow: false
+) {
+    // Back action
+}
+
+// Text-only pill with accessibility label
+FloatingButton(
+    icon: nil,
+    text: "Save Draft",
+    color: .orange,
+    textColor: .white,
+    shape: .capsule,
+    accessibilityLabel: "Save current draft"
+) {
+    // Save draft
 }
 ```
+
+**Shape Options:**
+- `.circle`
+- `.capsule`
+- `.roundedRectangle(CGFloat)`
 
 **Alignment Options:**
 - `.leading` - Left side of screen
 - `.trailing` - Right side of screen
+
+**Backward compatible:**
+- `FloatingButtonUtilsView` remains available but is deprecated in favor of `FloatingButton`.
 
 ### TextFieldViewUtil
 

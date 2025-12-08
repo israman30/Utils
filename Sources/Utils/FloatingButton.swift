@@ -143,8 +143,104 @@ public struct FloatingButtonUtilsView: View {
     }
 }
 
-// Example usage for preview
-#Preview {
+// MARK: - Samples / Previews
+
+private struct FloatingButtonSampleCard<Content: View>: View {
+    let title: String
+    let description: String
+    @ViewBuilder var content: () -> Content
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title)
+                .font(.headline)
+            Text(description)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            
+            ZStack {
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Color.gray.opacity(0.08))
+                
+                content()
+            }
+            .frame(height: 170)
+        }
+    }
+}
+
+private struct FloatingButtonShowcase: View {
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                FloatingButtonSampleCard(
+                    title: "Icon-only primary",
+                    description: "Default circle button aligned to the trailing edge."
+                ) {
+                    FloatingButton { print("Primary tapped") }
+                }
+                
+                FloatingButtonSampleCard(
+                    title: "Label + icon capsule",
+                    description: "Use text and icon for clarity on larger screens."
+                ) {
+                    FloatingButton(
+                        icon: "square.and.pencil",
+                        text: "Compose",
+                        color: .purple,
+                        textColor: .white,
+                        shape: .capsule
+                    ) { print("Compose tapped") }
+                }
+                
+                FloatingButtonSampleCard(
+                    title: "Leading toolbar action",
+                    description: "Place on the leading edge for close/back style actions."
+                ) {
+                    FloatingButton(
+                        icon: "chevron.left",
+                        text: "Back",
+                        color: .gray.opacity(0.9),
+                        textColor: .white,
+                        alignment: .leading,
+                        shape: .roundedRectangle(14)
+                    ) { print("Back tapped") }
+                }
+                
+                FloatingButtonSampleCard(
+                    title: "Minimal/no shadow",
+                    description: "Turn off the shadow for glassmorphism or inline layouts."
+                ) {
+                    FloatingButton(
+                        icon: "questionmark.circle",
+                        text: "Help",
+                        color: .white,
+                        textColor: .blue,
+                        shape: .capsule,
+                        shadow: false,
+                        accessibilityLabel: "Help and support"
+                    ) { print("Help tapped") }
+                }
+                
+                FloatingButtonSampleCard(
+                    title: "Text-only pill",
+                    description: "Remove the icon to create a floating call-to-action pill."
+                ) {
+                    FloatingButton(
+                        icon: nil,
+                        text: "Save Draft",
+                        color: .orange,
+                        textColor: .white,
+                        shape: .capsule
+                    ) { print("Save tapped") }
+                }
+            }
+            .padding(20)
+        }
+    }
+}
+
+#Preview("FloatingButton Basics") {
     FloatingButton(
         icon: "plus",
         text: "Add",
@@ -156,5 +252,9 @@ public struct FloatingButtonUtilsView: View {
     ) {
         print("Tapped!")
     }
+}
+
+#Preview("FloatingButton Showcase") {
+    FloatingButtonShowcase()
 }
 
