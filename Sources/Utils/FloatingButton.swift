@@ -15,7 +15,9 @@ public enum FloatingButtonShape: Sendable {
 public struct FloatingButton: View {
     public var icon: String? = nil
     public var text: String? = nil
-    public var color: Color = .blue
+    /// Uses the current accent color by default so the button stays on-brand in light/dark mode.
+    public var color: Color = .accentColor
+    /// Foreground defaults to a high-contrast white over the accent background.
     public var textColor: Color = .white
     public var action: () -> Void
     public var alignment: AlignmentFloatingButton = .trailing
@@ -26,7 +28,7 @@ public struct FloatingButton: View {
     public init(
         icon: String? = "plus",
         text: String? = nil,
-        color: Color = .blue,
+        color: Color = .accentColor,
         textColor: Color = .white,
         alignment: AlignmentFloatingButton = .trailing,
         shape: FloatingButtonShape = .circle,
@@ -138,7 +140,7 @@ public struct FloatingButtonUtilsView: View {
     
     public init(
         alignment: AlignmentFloatingButton = .trailing,
-        color: Color = .blue,
+        color: Color = .accentColor,
         icon: String = "plus",
         action: @escaping () -> Void
     ) {
@@ -164,18 +166,20 @@ public struct FloatingButtonUtilsView: View {
 public struct GlassFloatingButton: View {
     public var icon: String? = "plus"
     public var text: String? = nil
-    public var tint: Color = .white
+    /// Uses system accent by default to adapt to both light and dark themes.
+    public var tint: Color = .accentColor
     public var action: () -> Void
     public var alignment: AlignmentFloatingButton = .trailing
     public var shape: FloatingButtonShape = .capsule
     public var accessibilityLabel: String? = nil
     
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     
     public init(
         icon: String? = "plus",
         text: String? = nil,
-        tint: Color = .white,
+        tint: Color = .accentColor,
         alignment: AlignmentFloatingButton = .trailing,
         shape: FloatingButtonShape = .capsule,
         accessibilityLabel: String? = nil,
@@ -219,7 +223,7 @@ public struct GlassFloatingButton: View {
             .background(glassBackground)
             .modifier(ShapeModifier(shape: shape))
             .overlay(glassStroke)
-            .shadow(color: tint.opacity(0.25), radius: 12, x: 0, y: 8)
+            .shadow(color: tint.opacity(colorScheme == .dark ? 0.35 : 0.25), radius: 12, x: 0, y: 8)
         }
         .accessibilityLabel(accessibilityLabel ?? (text ?? icon ?? "Glass Floating Button"))
         .accessibilityAddTraits(.isButton)
@@ -236,13 +240,13 @@ public struct GlassFloatingButton: View {
                 if #available(iOS 15.0, *) {
                     Color.clear.background(.ultraThinMaterial)
                 } else {
-                    Color.white.opacity(0.85)
+                    Color(uiColor: .systemBackground).opacity(0.85)
                 }
             }
 #else
             // On macOS or other platforms, fallback
             if reduceTransparency {
-                Color.gray.opacity(0.15)
+                Color.primary.opacity(0.1)
             } else {
                 Color.clear.background(.regularMaterial)
             }
@@ -252,7 +256,16 @@ public struct GlassFloatingButton: View {
     
     private var glassStroke: some View {
         FloatingButtonShapeContainer(shape: shape)
-            .stroke(Color.white.opacity(reduceTransparency ? 0.35 : 0.55), lineWidth: 1)
+            .stroke(strokeColor, lineWidth: 1)
+    }
+    
+    private var strokeColor: Color {
+        if reduceTransparency {
+            return Color.primary.opacity(colorScheme == .dark ? 0.45 : 0.3)
+        }
+        return colorScheme == .dark
+        ? Color.white.opacity(0.55)
+        : Color.primary.opacity(0.25)
     }
 }
 
