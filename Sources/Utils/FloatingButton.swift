@@ -269,6 +269,200 @@ public struct GlassFloatingButton: View {
     }
 }
 
+// MARK: - Expandable Floating Action Menu
+
+/// Represents an item inside the expandable floating action menu.
+public struct FloatingMenuItem: Identifiable {
+    public let id = UUID()
+    public let title: String
+    public let icon: String?
+    public let tint: Color
+    public let foregroundColor: Color
+    public let accessibilityLabel: String?
+    public let accessibilityHint: String?
+    public let action: () -> Void
+    
+    public init(
+        title: String,
+        icon: String? = nil,
+        tint: Color = .accentColor,
+        foregroundColor: Color = .white,
+        accessibilityLabel: String? = nil,
+        accessibilityHint: String? = nil,
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.icon = icon
+        self.tint = tint
+        self.foregroundColor = foregroundColor
+        self.accessibilityLabel = accessibilityLabel
+        self.accessibilityHint = accessibilityHint
+        self.action = action
+    }
+}
+
+/// Floating button that reveals up to three vertically stacked custom actions.
+public struct FloatingActionMenu: View {
+    public var mainIcon: String
+    public var mainLabel: String?
+    public var mainTint: Color
+    public var mainForegroundColor: Color
+    public var alignment: AlignmentFloatingButton
+    public var shape: FloatingButtonShape
+    public var items: [FloatingMenuItem]
+    public var shadow: Bool
+    
+    @State private var isExpanded = false
+    
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    
+    public init(
+        mainIcon: String = "plus",
+        mainLabel: String? = nil,
+        mainTint: Color = .accentColor,
+        mainForegroundColor: Color = .white,
+        alignment: AlignmentFloatingButton = .trailing,
+        shape: FloatingButtonShape = .circle,
+        items: [FloatingMenuItem],
+        shadow: Bool = true
+    ) {
+        self.mainIcon = mainIcon
+        self.mainLabel = mainLabel
+        self.mainTint = mainTint
+        self.mainForegroundColor = mainForegroundColor
+        self.alignment = alignment
+        self.shape = shape
+        self.items = items
+        self.shadow = shadow
+    }
+    
+    private var displayedItems: [FloatingMenuItem] {
+        Array(items.prefix(3))
+    }
+    
+    private var stackAlignment: HorizontalAlignment {
+        alignment == .leading ? .leading : .trailing
+    }
+    
+    private var expansionAnimation: Animation {
+        if reduceMotion {
+            return .linear(duration: 0.12)
+        }
+        return .spring(response: 0.32, dampingFraction: 0.82)
+    }
+    
+    public var body: some View {
+        ZStack {
+            VStack {
+                Spacer()
+                HStack {
+                    if alignment == .trailing { Spacer() }
+                    
+                    VStack(alignment: stackAlignment, spacing: 12) {
+                        if isExpanded {
+                            ForEach(Array(displayedItems.enumerated()), id: \.element.id) { index, item in
+                                FloatingActionMenuItemButton(
+                                    item: item,
+                                    shape: shape,
+                                    shadow: shadow,
+                                    colorScheme: colorScheme
+                                )
+                                .transition(.move(edge: .bottom).combined(with: .opacity))
+                                .zIndex(Double(displayedItems.count - index))
+                            }
+                        }
+                        
+                        mainButton
+                    }
+                    
+                    if alignment == .leading { Spacer() }
+                }
+            }
+        }
+        .animation(expansionAnimation, value: isExpanded)
+    }
+    
+    private var mainButton: some View {
+        Button {
+            withAnimation(expansionAnimation) {
+                isExpanded.toggle()
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: mainIcon)
+                    .font(.headline.weight(.bold))
+                    .rotationEffect(.degrees(isExpanded ? 45 : 0))
+                if let mainLabel {
+                    Text(mainLabel)
+                        .font(.headline.weight(.semibold))
+                        .minimumScaleFactor(0.9)
+                }
+            }
+            .padding(.horizontal, 18)
+            .padding(.vertical, 14)
+            .foregroundStyle(mainForegroundColor)
+            .background(mainTint)
+            .modifier(ShapeModifier(shape: shape))
+            .if(shadow) {
+                $0.shadow(
+                    color: mainTint.opacity(colorScheme == .dark ? 0.45 : 0.28),
+                    radius: 10,
+                    x: 0,
+                    y: 8
+                )
+            }
+        }
+        .accessibilityLabel(mainLabel ?? "More actions")
+        .accessibilityHint(isExpanded ? "Hides secondary actions" : "Shows secondary actions")
+        .accessibilityAddTraits(.isButton)
+    }
+}
+
+private struct FloatingActionMenuItemButton: View {
+    let item: FloatingMenuItem
+    let shape: FloatingButtonShape
+    let shadow: Bool
+    let colorScheme: ColorScheme
+    
+    var body: some View {
+        Button(action: item.action) {
+            HStack(spacing: 10) {
+                if let icon = item.icon {
+                    Image(systemName: icon)
+                        .font(.headline.weight(.semibold))
+                        .accessibilityHidden(true)
+                }
+                Text(item.title)
+                    .font(.headline.weight(.semibold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.9)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .frame(maxWidth: 220, alignment: .leading)
+            .foregroundStyle(item.foregroundColor)
+            .background(item.tint.opacity(colorScheme == .dark ? 0.9 : 0.92))
+            .modifier(ShapeModifier(shape: shape))
+            .overlay(
+                FloatingButtonShapeContainer(shape: shape)
+                    .stroke(item.tint.opacity(colorScheme == .dark ? 0.55 : 0.3), lineWidth: 1)
+            )
+            .if(shadow) {
+                $0.shadow(
+                    color: item.tint.opacity(colorScheme == .dark ? 0.5 : 0.22),
+                    radius: 12,
+                    x: 0,
+                    y: 8
+                )
+            }
+        }
+        .accessibilityLabel(item.accessibilityLabel ?? item.title)
+        .accessibilityHint(item.accessibilityHint ?? "Performs \(item.title)")
+        .accessibilityAddTraits(.isButton)
+    }
+}
+
 // MARK: - Samples / Previews
 
 private struct FloatingButtonSampleCard<Content: View>: View {
@@ -394,4 +588,38 @@ private struct FloatingButtonShowcase: View {
 
 #Preview("FloatingButton Showcase") {
     FloatingButtonShowcase()
+}
+
+#Preview("FloatingActionMenu") {
+    FloatingActionMenu(
+        mainIcon: "plus",
+        mainLabel: "Quick Actions",
+        mainTint: .accentColor,
+        mainForegroundColor: .white,
+        alignment: .trailing,
+        shape: .capsule,
+        items: [
+            FloatingMenuItem(
+                title: "New Note",
+                icon: "square.and.pencil",
+                tint: .purple,
+                accessibilityHint: "Creates a new note"
+            ) { print("New note") },
+            FloatingMenuItem(
+                title: "Upload",
+                icon: "arrow.up.circle.fill",
+                tint: .blue,
+                accessibilityHint: "Uploads your latest file"
+            ) { print("Upload") },
+            FloatingMenuItem(
+                title: "Support",
+                icon: "questionmark.circle",
+                tint: .orange,
+                accessibilityHint: "Opens help and support"
+            ) { print("Support") }
+        ]
+    )
+    .padding()
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+    .background(Color(.systemBackground))
 }
