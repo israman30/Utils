@@ -32,6 +32,8 @@ struct TextFieldUtils: View {
 }
 
 public struct TextFieldViewUtil<Header: View>: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     public var placeholder: String = ""
     @Binding public var inputText: String
     public var font: Font = .title
@@ -67,7 +69,6 @@ public struct TextFieldViewUtil<Header: View>: View {
         self.font = font
         self.iconPlaceholder = iconPlaceholder
         self.headerText = headerText
-        self.shadowColor = shadowColor
         self.color = color
         self.cornerRadius = cornerRadius
         self.shadowColor = shadowColor
@@ -78,64 +79,150 @@ public struct TextFieldViewUtil<Header: View>: View {
     @ViewBuilder
     public var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                if !iconPlaceholder.isEmpty {
-                    Image(systemName: iconPlaceholder)
+            VStack(alignment: .leading, spacing: 6) {
+                if let header = header {
+                    header()
+                        .font(.headline)
+                        .foregroundStyle(labelColor)
                         .accessibilityHidden(true)
                 }
-                if isSecure {
-                    VStack(alignment: .leading) {
-                        if let header = header { header() }
-                        VStack {
-                            if isPasswordVisible {
-                                TextField(placeholder, text: $inputText)
-                                    .textContentType(.password)
-                                    .autocapitalization(.none)
-                                    .disableAutocorrection(true)
-                                    .focused($isFocused)
-                                    .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
-                                    .accessibilityHint("Password field, visible")
-                                // Show/Hide button
-                            } else {
-                                SecureField(placeholder, text: $inputText)
-                                    .textContentType(.password)
-                                    .focused($isFocused)
-                                    .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
-                                    .accessibilityHint("Password field, hidden")
-                            }
-                            Button(action: { isPasswordVisible.toggle() }) {
-                                Image(systemName: isPasswordVisible ? "eye.slash" : "eye")
-                                    .foregroundColor(.gray)
-                                    .accessibilityLabel(isPasswordVisible ? "Hide password" : "Show password")
-                                    .accessibilityValue(headerText.isEmpty ? placeholder : headerText)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                        .padding()
-                        .customModifier(gradient: color)
+                
+                HStack(spacing: 12) {
+                    if !iconPlaceholder.isEmpty {
+                        Image(systemName: iconPlaceholder)
+                            .foregroundStyle(labelColor)
+                            .accessibilityHidden(true)
                     }
-                } else {
-                    VStack(alignment: .leading) {
-                        if let header = header { header() }
-                        VStack {
-                            TextField(placeholder, text: $inputText)
-                                .focused($isFocused)
-                                .textContentType(.none)
-                                .autocapitalization(.none)
-                                .disableAutocorrection(false)
-                                .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
-                        }
-                        .padding()
-                        .customModifier(gradient: color)
+                    
+                    if isSecure {
+                        secureField
+                    } else {
+                        regularField
                     }
                 }
+                .padding(14)
+                .background(gradientBackground)
+                .overlay(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .stroke(borderColor, lineWidth: isFocused ? 2 : 1)
+                )
+                .shadow(
+                    color: shadowColor.opacity(colorScheme == .dark ? 0.35 : 0.2),
+                    radius: shadowRadius,
+                    x: 0,
+                    y: 6
+                )
+                .contentShape(RoundedRectangle(cornerRadius: cornerRadius))
+                .onTapGesture { isFocused = true }
+                .animation(.easeInOut(duration: 0.18), value: isFocused)
             }
             .font(font)
             .textFieldStyle(.plain)
             .accessibilityElement(children: .combine)
-            // Accessibility: VoiceOver Traits
             .accessibilityAddTraits(.isKeyboardKey)
         }
+    }
+    
+    // MARK: - Field Builders
+    
+    private var regularField: some View {
+        TextField(
+            text: $inputText,
+            prompt: Text(placeholder).foregroundColor(placeholderColor)
+        ) { }
+        .focused($isFocused)
+        .textContentType(.none)
+        .textInputAutocapitalization(.never)
+        .autocorrectionDisabled(false)
+        .foregroundStyle(textColor)
+        .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
+        .accessibilityValue(inputText)
+        .accessibilityHint("Text field")
+    }
+    
+    private var secureField: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if isPasswordVisible {
+                TextField(
+                    text: $inputText,
+                    prompt: Text(placeholder).foregroundColor(placeholderColor)
+                ) { }
+                .textContentType(.password)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
+                .focused($isFocused)
+                .foregroundStyle(textColor)
+                .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
+                .accessibilityHint("Password field, visible")
+            } else {
+                SecureField(
+                    text: $inputText,
+                    prompt: Text(placeholder).foregroundColor(placeholderColor)
+                ) { }
+                .textContentType(.password)
+                .focused($isFocused)
+                .foregroundStyle(textColor)
+                .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
+                .accessibilityHint("Password field, hidden")
+            }
+            
+            Button(action: { isPasswordVisible.toggle() }) {
+                HStack(spacing: 6) {
+                    Image(systemName: isPasswordVisible ? "eye.slash" : "eye")
+                    Text(isPasswordVisible ? "Hide" : "Show")
+                }
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(labelColor)
+                .padding(.vertical, 6)
+                .padding(.horizontal, 10)
+                .background(buttonBackground)
+                .cornerRadius(12)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(isPasswordVisible ? "Hide password" : "Show password")
+            .accessibilityValue(headerText.isEmpty ? placeholder : headerText)
+        }
+    }
+    
+    // MARK: - Styling
+    
+    private var gradientBackground: LinearGradient {
+        let lightColors = [
+            color.opacity(0.12),
+            color.opacity(0.2)
+        ]
+        let darkColors = [
+            color.opacity(0.35),
+            color.opacity(0.22)
+        ]
+        return LinearGradient(
+            colors: colorScheme == .dark ? darkColors : lightColors,
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+    
+    private var buttonBackground: Color {
+        colorScheme == .dark
+        ? Color.white.opacity(0.08)
+        : Color.black.opacity(0.05)
+    }
+    
+    private var placeholderColor: Color {
+        colorScheme == .dark ? .gray : .secondary
+    }
+    
+    private var textColor: Color {
+        colorScheme == .dark ? .white : .primary
+    }
+    
+    private var labelColor: Color {
+        colorScheme == .dark ? .white.opacity(0.9) : .primary
+    }
+    
+    private var borderColor: Color {
+        if isFocused { return .accentColor }
+        return Color.secondary.opacity(colorScheme == .dark ? 0.6 : 0.35)
     }
 }
 
@@ -157,7 +244,6 @@ extension TextFieldViewUtil where Header == EmptyView {
         self.font = font
         self.iconPlaceholder = iconPlaceholder
         self.headerText = headerText
-        self.shadowColor = shadowColor
         self.color = color
         self.cornerRadius = cornerRadius
         self.shadowColor = shadowColor
@@ -165,38 +251,3 @@ extension TextFieldViewUtil where Header == EmptyView {
         self.header = nil
     }
 }
-
-struct CustomModifier: ViewModifier {
-    var color: Color
-    var cornerRadius: CGFloat = 20
-    var shadowRadius: CGFloat = 10
-    var shadowColor: Color = .gray
-    
-    func body(content: Content) -> some View {
-        content
-            .background(
-                color
-            )
-            .cornerRadius(cornerRadius  )
-            .shadow(color: .gray, radius: shadowRadius)
-    }
-}
-
-extension View {
-    func customModifier(
-        gradient color: Color,
-        cornerRadius: CGFloat = 20,
-        shadowRadius: CGFloat = 10,
-        shadowColor: Color = .gray
-    ) -> some View {
-        modifier(
-            CustomModifier(
-                color: color,
-                cornerRadius: cornerRadius,
-                shadowRadius: shadowRadius,
-                shadowColor: shadowColor
-            )
-        )
-    }
-}
-
