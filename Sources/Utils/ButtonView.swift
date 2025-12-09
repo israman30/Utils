@@ -77,6 +77,42 @@ struct ButtonView: View {
                 .labels("Neumorphic action"),
                 .hint("Activates the soft raised control")
             ])
+
+            Text("Round Buttons")
+                .font(.title2.bold())
+                .accessibility(options: [
+                    .traits([.isHeader]),
+                    .labels("Round buttons section")
+                ])
+
+            HStack(spacing: 16) {
+                RoundButtonUtils(
+                    label: "Favorite",
+                    icon: "heart.fill",
+                    backgroundColor: .pink,
+                    foregroundColor: .white,
+                    accessibilityLabel: "Favorite item",
+                    accessibilityHint: "Marks the item as favorite"
+                ) { /* action */ }
+
+                RoundButtonUtils(
+                    label: "Share",
+                    icon: "square.and.arrow.up",
+                    backgroundColor: .blue,
+                    foregroundColor: .white,
+                    accessibilityLabel: "Share item",
+                    accessibilityHint: "Shares this item with your contacts"
+                ) { /* action */ }
+
+                RoundButtonUtils(
+                    label: "Download",
+                    icon: "arrow.down.circle.fill",
+                    backgroundColor: .green,
+                    foregroundColor: .white,
+                    accessibilityLabel: "Download item",
+                    accessibilityHint: "Downloads the selected item"
+                ) { /* action */ }
+            }
         }
         .padding()
     }
@@ -175,6 +211,91 @@ public struct GlassButton: View {
             .labels(accessibilityLabel ?? title),
             .hint(accessibilityHint ?? "Activates \(title)")
         ])
+    }
+}
+
+public struct RoundButtonUtils: View {
+    @Environment(\.colorScheme) private var colorScheme
+
+    public let label: String
+    public let icon: String?
+    public let backgroundColor: Color?
+    public let foregroundColor: Color?
+    public let accessibilityLabel: String?
+    public let accessibilityHint: String?
+    public let action: () -> Void
+
+    public init(
+        label: String = "Action",
+        icon: String? = nil,
+        backgroundColor: Color? = nil,
+        foregroundColor: Color? = nil,
+        accessibilityLabel: String? = nil,
+        accessibilityHint: String? = nil,
+        action: @escaping () -> Void
+    ) {
+        self.label = label
+        self.icon = icon
+        self.backgroundColor = backgroundColor
+        self.foregroundColor = foregroundColor
+        self.accessibilityLabel = accessibilityLabel
+        self.accessibilityHint = accessibilityHint
+        self.action = action
+    }
+
+    public var body: some View {
+        Button(action: action) {
+            VStack(spacing: 10) {
+                ZStack {
+                    Circle()
+                        .fill(resolvedBackground)
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white.opacity(colorScheme == .dark ? 0.15 : 0.25), lineWidth: 1)
+                        )
+                        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.45 : 0.18), radius: 6, x: 0, y: 4)
+                        .frame(width: 68, height: 68)
+
+                    if let icon {
+                        Image(systemName: icon)
+                            .font(.title2.weight(.semibold))
+                            .foregroundStyle(resolvedForeground)
+                            .accessibilityHidden(true)
+                    } else {
+                        Text(String(label.prefix(2)).uppercased())
+                            .font(.headline.weight(.bold))
+                            .foregroundStyle(resolvedForeground)
+                            .accessibilityHidden(true)
+                    }
+                }
+
+                Text(label)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            .frame(minWidth: 80)
+        }
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .ignore)
+        .accessibility(options: [
+            .traits([.isButton]),
+            .labels(accessibilityLabel ?? label),
+            .hint(accessibilityHint ?? "Activates \(label)")
+        ])
+    }
+
+    private var resolvedBackground: Color {
+        backgroundColor ?? (colorScheme == .dark ? Color.white.opacity(0.16) : Color.accentColor)
+    }
+
+    private var resolvedForeground: Color {
+        if let foregroundColor { return foregroundColor }
+        if backgroundColor == nil {
+            return Color.white
+        }
+        return colorScheme == .dark ? Color.white : Color.primary
     }
 }
 
@@ -440,5 +561,27 @@ extension View {
     func utilButtonType(_ type: ButtonStyleType) -> some View {
         modifier(SystemButtonModifier(type: type))
     }
+}
+
+#Preview("RoundButtonUtils - Light") {
+    HStack(spacing: 16) {
+        RoundButtonUtils(icon: "heart.fill") { }
+        RoundButtonUtils(label: "Share", icon: "square.and.arrow.up", backgroundColor: .blue, foregroundColor: .white) { }
+        RoundButtonUtils(label: "Muted", icon: "speaker.slash.fill", backgroundColor: .gray.opacity(0.2), foregroundColor: .primary) { }
+    }
+    .padding()
+    .previewLayout(.sizeThatFits)
+    .preferredColorScheme(.light)
+}
+
+#Preview("RoundButtonUtils - Dark") {
+    HStack(spacing: 16) {
+        RoundButtonUtils(icon: "heart.fill") { }
+        RoundButtonUtils(label: "Share", icon: "square.and.arrow.up", backgroundColor: .blue, foregroundColor: .white) { }
+        RoundButtonUtils(label: "Muted", icon: "speaker.slash.fill", backgroundColor: .gray.opacity(0.3), foregroundColor: .white) { }
+    }
+    .padding()
+    .previewLayout(.sizeThatFits)
+    .preferredColorScheme(.dark)
 }
 
