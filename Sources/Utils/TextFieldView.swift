@@ -34,17 +34,21 @@ struct TextFieldUtils: View {
 public struct TextFieldViewUtil<Header: View>: View {
     @Environment(\.colorScheme) private var colorScheme
     
-    public var placeholder: String = ""
+    public var placeholder: String?
     @Binding public var inputText: String
     public var font: Font = .title
-    public var headerText = ""
-    public var iconPlaceholder = ""
+    public var headerText: String?
+    public var iconPlaceholder: String?
     public var shadowRadius: CGFloat = 2
-    public var color: Color = Color.gray.opacity(0.1)
+    public var color: Color?
     public var cornerRadius: CGFloat = 20
-    public var shadowColor: Color = .gray
+    public var shadowColor: Color?
     public var isSecure: Bool = false
     public var header: (() -> Header)? = nil
+    public var textColorOverride: Color? = nil
+    public var placeholderColorOverride: Color? = nil
+    public var labelColorOverride: Color? = nil
+    public var focusedBorderColor: Color? = nil
 
     // UX Improvements: FocusState for iOS 15+
     @FocusState private var isFocused: Bool
@@ -52,16 +56,20 @@ public struct TextFieldViewUtil<Header: View>: View {
     @State private var isPasswordVisible: Bool = false
     
     public init(
-        _ placeholder: String = "",
+        _ placeholder: String? = nil,
         inputText: Binding<String>,
         font: Font = .title,
-        iconPlaceholder: String = "",
-        headerText: String = "",
+        iconPlaceholder: String? = nil,
+        headerText: String? = nil,
         shadowRadius: CGFloat = 2,
-        color: Color = Color.gray.opacity(0.1),
+        color: Color? = nil,
         cornerRadius: CGFloat = 20,
-        shadowColor: Color = .gray,
+        shadowColor: Color? = nil,
         isSecure: Bool = false,
+        textColor: Color? = nil,
+        placeholderColor: Color? = nil,
+        labelColor: Color? = nil,
+        focusedBorderColor: Color? = nil,
         header: (() -> Header)? = nil
     ) {
         self.placeholder = placeholder
@@ -74,6 +82,10 @@ public struct TextFieldViewUtil<Header: View>: View {
         self.shadowColor = shadowColor
         self.isSecure = isSecure
         self.header = header
+        self.textColorOverride = textColor
+        self.placeholderColorOverride = placeholderColor
+        self.labelColorOverride = labelColor
+        self.focusedBorderColor = focusedBorderColor
     }
     
     @ViewBuilder
@@ -83,14 +95,19 @@ public struct TextFieldViewUtil<Header: View>: View {
                 if let header = header {
                     header()
                         .font(.headline)
-                        .foregroundStyle(labelColor)
+                        .foregroundStyle(effectiveLabelColor)
+                        .accessibilityHidden(true)
+                } else if let headerTitle = resolvedHeaderTitle {
+                    Text(headerTitle)
+                        .font(.headline)
+                        .foregroundStyle(effectiveLabelColor)
                         .accessibilityHidden(true)
                 }
                 
                 HStack(spacing: 12) {
-                    if !iconPlaceholder.isEmpty {
+                    if let iconPlaceholder, !iconPlaceholder.isEmpty {
                         Image(systemName: iconPlaceholder)
-                            .foregroundStyle(labelColor)
+                            .foregroundStyle(effectiveLabelColor)
                             .accessibilityHidden(true)
                     }
                     
@@ -107,7 +124,7 @@ public struct TextFieldViewUtil<Header: View>: View {
                         .stroke(borderColor, lineWidth: isFocused ? 2 : 1)
                 )
                 .shadow(
-                    color: shadowColor.opacity(colorScheme == .dark ? 0.35 : 0.2),
+                    color: resolvedShadowColor.opacity(colorScheme == .dark ? 0.35 : 0.2),
                     radius: shadowRadius,
                     x: 0,
                     y: 6
@@ -128,14 +145,14 @@ public struct TextFieldViewUtil<Header: View>: View {
     private var regularField: some View {
         TextField(
             text: $inputText,
-            prompt: Text(placeholder).foregroundColor(placeholderColor)
+            prompt: Text(resolvedPlaceholder).foregroundStyle(placeholderColor)
         ) { }
         .focused($isFocused)
         .textContentType(.none)
         .textInputAutocapitalization(.never)
         .autocorrectionDisabled(false)
         .foregroundStyle(textColor)
-        .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
+        .accessibilityLabel(accessibilityLabelText)
         .accessibilityValue(inputText)
         .accessibilityHint("Text field")
     }
@@ -145,24 +162,24 @@ public struct TextFieldViewUtil<Header: View>: View {
             if isPasswordVisible {
                 TextField(
                     text: $inputText,
-                    prompt: Text(placeholder).foregroundColor(placeholderColor)
+                    prompt: Text(resolvedPlaceholder).foregroundStyle(placeholderColor)
                 ) { }
                 .textContentType(.password)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled(true)
                 .focused($isFocused)
                 .foregroundStyle(textColor)
-                .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
+                .accessibilityLabel(accessibilityLabelText)
                 .accessibilityHint("Password field, visible")
             } else {
                 SecureField(
                     text: $inputText,
-                    prompt: Text(placeholder).foregroundColor(placeholderColor)
+                    prompt: Text(resolvedPlaceholder).foregroundStyle(placeholderColor)
                 ) { }
                 .textContentType(.password)
                 .focused($isFocused)
                 .foregroundStyle(textColor)
-                .accessibilityLabel(headerText.isEmpty ? placeholder : headerText)
+                .accessibilityLabel(accessibilityLabelText)
                 .accessibilityHint("Password field, hidden")
             }
             
@@ -172,7 +189,7 @@ public struct TextFieldViewUtil<Header: View>: View {
                     Text(isPasswordVisible ? "Hide" : "Show")
                 }
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(labelColor)
+                .foregroundStyle(effectiveLabelColor)
                 .padding(.vertical, 6)
                 .padding(.horizontal, 10)
                 .background(buttonBackground)
@@ -180,7 +197,7 @@ public struct TextFieldViewUtil<Header: View>: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(isPasswordVisible ? "Hide password" : "Show password")
-            .accessibilityValue(headerText.isEmpty ? placeholder : headerText)
+            .accessibilityValue(accessibilityLabelText)
         }
     }
     
@@ -188,12 +205,12 @@ public struct TextFieldViewUtil<Header: View>: View {
     
     private var gradientBackground: LinearGradient {
         let lightColors = [
-            color.opacity(0.12),
-            color.opacity(0.2)
+            baseColor.opacity(0.12),
+            baseColor.opacity(0.2)
         ]
         let darkColors = [
-            color.opacity(0.35),
-            color.opacity(0.22)
+            baseColor.opacity(0.35),
+            baseColor.opacity(0.22)
         ]
         return LinearGradient(
             colors: colorScheme == .dark ? darkColors : lightColors,
@@ -209,35 +226,62 @@ public struct TextFieldViewUtil<Header: View>: View {
     }
     
     private var placeholderColor: Color {
-        colorScheme == .dark ? .gray : .secondary
+        placeholderColorOverride ?? (colorScheme == .dark ? .gray : .secondary)
     }
     
     private var textColor: Color {
-        colorScheme == .dark ? .white : .primary
+        textColorOverride ?? (colorScheme == .dark ? .white : .primary)
     }
     
-    private var labelColor: Color {
-        colorScheme == .dark ? .white.opacity(0.9) : .primary
+    private var effectiveLabelColor: Color {
+        labelColorOverride ?? (colorScheme == .dark ? .white.opacity(0.9) : .primary)
     }
     
     private var borderColor: Color {
-        if isFocused { return .accentColor }
+        if isFocused { return focusedBorderColor ?? .accentColor }
         return Color.secondary.opacity(colorScheme == .dark ? 0.6 : 0.35)
+    }
+    
+    private var resolvedHeaderTitle: String? {
+        if let headerText, !headerText.isEmpty { return headerText }
+        if let placeholder, !placeholder.isEmpty { return placeholder }
+        return nil
+    }
+    
+    private var resolvedPlaceholder: String {
+        if let placeholder, !placeholder.isEmpty { return placeholder }
+        return "Placeholder"
+    }
+    
+    private var accessibilityLabelText: String {
+        resolvedHeaderTitle ?? resolvedPlaceholder
+    }
+    
+    private var baseColor: Color {
+        color ?? Color.gray.opacity(0.1)
+    }
+    
+    private var resolvedShadowColor: Color {
+        shadowColor ?? .gray
     }
 }
 
 extension TextFieldViewUtil where Header == EmptyView {
     init(
-        _ placeholder: String = "",
+        _ placeholder: String? = nil,
         inputText: Binding<String>,
         font: Font = .title,
-        iconPlaceholder: String = "",
-        headerText: String = "",
+        iconPlaceholder: String? = nil,
+        headerText: String? = nil,
         shadowRadius: CGFloat = 2,
-        color: Color = Color.gray.opacity(0.1),
+        color: Color? = nil,
         cornerRadius: CGFloat = 20,
-        shadowColor: Color = .gray,
+        shadowColor: Color? = nil,
         isSecure: Bool = false,
+        textColor: Color? = nil,
+        placeholderColor: Color? = nil,
+        labelColor: Color? = nil,
+        focusedBorderColor: Color? = nil
     ) {
         self.placeholder = placeholder
         self._inputText = inputText
@@ -249,5 +293,9 @@ extension TextFieldViewUtil where Header == EmptyView {
         self.shadowColor = shadowColor
         self.isSecure = isSecure
         self.header = nil
+        self.textColorOverride = textColor
+        self.placeholderColorOverride = placeholderColor
+        self.labelColorOverride = labelColor
+        self.focusedBorderColor = focusedBorderColor
     }
 }
