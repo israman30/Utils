@@ -74,7 +74,7 @@ public struct ToolbarButton: ToolbarContent {
     let label: String?
     let action: () -> Void
     
-    init(placement: ToolbarItemPlacement, icon: String?, label: String?, action: @escaping () -> Void) {
+    public init(placement: ToolbarItemPlacement, icon: String?, label: String?, action: @escaping () -> Void) {
         self.placement = placement
         self.icon = icon
         self.label = label
@@ -127,7 +127,7 @@ public struct ToolbarSearchField: ToolbarContent {
     @Binding var searchText: String
     let placeholder: String = ""
     
-    init(_ placement: ToolbarItemPlacement = .navigationBarTrailing, searchText: Binding<String>) {
+    public init(_ placement: ToolbarItemPlacement = .navigationBarTrailing, searchText: Binding<String>) {
         self.placement = placement
         self._searchText = searchText
     }
@@ -151,6 +151,26 @@ public struct ToolbarSearchField: ToolbarContent {
             .padding(8)
             .background(Color(.systemGray6))
             .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+    }
+}
+
+// MARK: - Loading Indicator Toolbar Item
+public struct ToolbarActivityIndicator: ToolbarContent {
+    let placement: ToolbarItemPlacement
+    let isLoading: Bool
+    
+    public init(placement: ToolbarItemPlacement = .navigationBarTrailing, isLoading: Bool) {
+        self.placement = placement
+        self.isLoading = isLoading
+    }
+    
+    public var body: some ToolbarContent {
+        ToolbarItem(placement: placement) {
+            if isLoading {
+                ProgressView()
+                    .scaleEffect(0.8)
+            }
         }
     }
 }
