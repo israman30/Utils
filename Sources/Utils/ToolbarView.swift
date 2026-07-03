@@ -174,3 +174,24 @@ public struct ToolbarActivityIndicator: ToolbarContent {
         }
     }
 }
+
+// MARK: - Edit/Done Toggle Toolbar Item
+public struct ToolbarEditToggle: ToolbarContent {
+    let placemnet: ToolbarItemPlacement
+    @Binding var isEditing: Bool
+    
+    public init(placemnet: ToolbarItemPlacement = .navigationBarTrailing, isEditing: Binding<Bool>) {
+        self.placemnet = placemnet
+        self._isEditing = isEditing
+    }
+    
+    public var body: some ToolbarContent {
+        ToolbarItem(placement: placemnet) {
+            Button(isEditing ? "Done" : "Edit") {
+                withAnimation {
+                    self.isEditing.toggle()
+                }
+            }
+        }
+    }
+}
