@@ -98,7 +98,7 @@ public struct ToggleViewUtils: View {
                 .strokeBorder(resolvedBorderColor, lineWidth: 1)
         )
         .animation(.easeInOut(duration: 0.15), value: isOn)
-        .onChange(of: isOn) { _ in
+        .onChange(of: isOn) { _,_ in
             guard hapticFeedbackEnabled else { return }
             triggerHapticFeedback()
         }

@@ -563,25 +563,23 @@ extension View {
     }
 }
 
-#Preview("RoundButtonUtils - Light") {
+#Preview("RoundButtonUtils - Light", traits: .sizeThatFitsLayout) {
     HStack(spacing: 16) {
         RoundButtonUtils(icon: "heart.fill") { }
         RoundButtonUtils(label: "Share", icon: "square.and.arrow.up", backgroundColor: .blue, foregroundColor: .white) { }
         RoundButtonUtils(label: "Muted", icon: "speaker.slash.fill", backgroundColor: .gray.opacity(0.2), foregroundColor: .primary) { }
     }
     .padding()
-    .previewLayout(.sizeThatFits)
     .preferredColorScheme(.light)
 }
 
-#Preview("RoundButtonUtils - Dark") {
+#Preview("RoundButtonUtils - Dark", traits: .sizeThatFitsLayout) {
     HStack(spacing: 16) {
         RoundButtonUtils(icon: "heart.fill") { }
         RoundButtonUtils(label: "Share", icon: "square.and.arrow.up", backgroundColor: .blue, foregroundColor: .white) { }
         RoundButtonUtils(label: "Muted", icon: "speaker.slash.fill", backgroundColor: .gray.opacity(0.3), foregroundColor: .white) { }
     }
     .padding()
-    .previewLayout(.sizeThatFits)
     .preferredColorScheme(.dark)
 }
 
