@@ -26,7 +26,15 @@ enum ToolbarButtonStyle {
 
 struct ToolbarView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            Text("Sample View")
+                .navigationTitle("Sample View")
+                .toolbar {
+                    ToolbarButton(placement: .navigationBarTrailing, icon: "magnifyingglass", label: "Search") {
+                        // action
+                    }
+                }
+        }
     }
 }
 
