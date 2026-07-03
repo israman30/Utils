@@ -7,26 +7,25 @@
 
 import SwiftUI
 
-import SwiftUI
-
+#if DEBUG
 struct TooltipView: View {
     
     var body: some View {
         VStack(spacing: 50) {
             TooltipUtils("Label")
             
-            TooltipUtils("Label 2") {
+            TooltipUtils("Label 2", icon: {
                 Image(systemName: "heart.fill")
-            }
+            })
             
-            TooltipUtils("12", type: .left) {
+            TooltipUtils("12", type: .left, icon: {
                 Image(systemName: "bubble.fill")
-            }
+            })
             
             HStack {
-                TooltipUtils("12", type: .right) {
+                TooltipUtils("12", type: .right, icon: {
                     Image(systemName: "bubble.fill")
-                }
+                })
                 Text("Some text here")
                     .padding()
                     .foregroundStyle(.white)
@@ -40,6 +39,7 @@ struct TooltipView: View {
 #Preview {
     TooltipView()
 }
+#endif
 
 struct Triangle: Shape {
     nonisolated func path(in rect: CGRect) -> Path {
@@ -70,53 +70,119 @@ public struct TooltipUtils<Icon: View>: View {
     public var title: String
     public var type: TooltipDirection = .bottom
     public var icon: Icon
+    public var dismissOnTap: Bool
+    public var lineLimit: Int?
+    public var tapAction: (() -> Void)?
+    public var labelColor: Color
+    public var backgroundColor: Color
+    
+    @State private var isPresented: Bool = true
     
     public init(
         _ title: String,
         type: TooltipDirection = .bottom,
+        dismissOnTap: Bool = false,
+        lineLimit: Int? = 1,
+        tapAction: (() -> Void)? = nil,
+        labelColor: Color = .white,
+        backgroundColor: Color = .red.opacity(0.5),
         @ViewBuilder icon: () -> Icon = EmptyView.init
     ) {
         self.title = title
         self.type = type
+        self.dismissOnTap = dismissOnTap
+        self.lineLimit = lineLimit
+        self.tapAction = tapAction
+        self.labelColor = labelColor
+        self.backgroundColor = backgroundColor
         self.icon = icon()
     }
     
     public var body: some View {
         ZStack(alignment: alignment) {
-            HStack {
-                HStack(spacing: 2) {
-                    icon
-                        .foregroundStyle(.white)
-                        .padding(.trailing, 2)
-                    
-                    Text(title)
-                        .font(.system(size: 14, weight: .semibold))
-                        .lineLimit(1)
-                        .foregroundStyle(.white)
-                }
-                .padding(8)
-                .background(Color.red.opacity(0.5))
-                .cornerRadius(8)
+            if isVisible {
+                tooltipContent
+                    .transition(.opacity.combined(with: .scale(scale: 0.95)))
             }
             
-            switch type {
-            case .top:
-                triangle()
-                    .offset(y: -10)
-            case .left:
-                triangle()
-                    .rotationEffect(.degrees(-90))
-                    .offset(x: -15)
-            case .right:
-                triangle()
-                    .rotationEffect(.degrees(90))
-                    .offset(x: 15)
-            case .bottom:
-                triangle()
-                    .rotationEffect(.degrees(180))
-                    .offset(y: 10)
+            if isVisible {
+                switch type {
+                case .top:
+                    triangle()
+                        .offset(y: -10)
+                case .left:
+                    triangle()
+                        .rotationEffect(.degrees(-90))
+                        .offset(x: -15)
+                case .right:
+                    triangle()
+                        .rotationEffect(.degrees(90))
+                        .offset(x: 15)
+                case .bottom:
+                    triangle()
+                        .rotationEffect(.degrees(180))
+                        .offset(y: 10)
+                }
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: isPresented)
+        .transition(.opacity)
+        .contentShape(Rectangle())
+        .modifierIf(isTappable) { view in
+            view.onTapGesture {
+                handleTap()
+            }
+        }
+        .modifierIf(isTappable) { view in
+            view.accessibilityAction {
+                handleTap()
+            }
+        }
+        .accessibilityHidden(!isVisible)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(title))
+        .accessibilityAddTraits(isTappable ? .isButton : .isStaticText)
+        .modifierIf(isTappable) { view in
+            view.accessibilityHint(Text(dismissOnTap ? "Dismisses tooltip." : "Activates tooltip action."))
+        }
+    }
+    
+    private var tooltipContent: some View {
+        HStack(spacing: 6) {
+            if showsIcon {
+                icon
+                    .foregroundStyle(labelColor)
+                    .accessibilityHidden(true)
+            }
+            
+            Text(title)
+                .font(.system(size: 14, weight: .semibold))
+                .lineLimit(lineLimit)
+                .minimumScaleFactor(0.8)
+                .foregroundStyle(labelColor)
+        }
+        .padding(8)
+        .background(backgroundColor)
+        .cornerRadius(8)
+    }
+    
+    private var isTappable: Bool {
+        dismissOnTap || tapAction != nil
+    }
+
+    private var isVisible: Bool {
+        isPresented || !dismissOnTap
+    }
+    
+    private var showsIcon: Bool {
+        Icon.self != EmptyView.self
+    }
+    
+    private func handleTap() {
+        if dismissOnTap {
+            isPresented.toggle()
+        }
+        tapAction?()
     }
     
     private var alignment: Alignment {
@@ -134,7 +200,7 @@ public struct TooltipUtils<Icon: View>: View {
     
     private func triangle() -> some View {
         Triangle()
-            .fill(Color.red.opacity(0.5))
+            .fill(backgroundColor)
             .frame(width: 20, height: 10)
     }
 

@@ -1,0 +1,117 @@
+{
+  "": {
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/master.swiftdeps"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Accessibility.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Accessibility.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Accessibility.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Accessibility~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Accessibility.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Accessibility.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/ButtonView.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/ButtonView.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/ButtonView.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/ButtonView~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/ButtonView.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/ButtonView.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/FloatingButton.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/FloatingButton.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/FloatingButton.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/FloatingButton~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/FloatingButton.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/FloatingButton.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Form.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Form.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Form.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Form~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Form.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Form.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Grid.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Grid.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Grid.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Grid~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Grid.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Grid.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Picker.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Picker.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Picker.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Picker~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Picker.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Picker.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/RatingHearts.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingHearts.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingHearts.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingHearts~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingHearts.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingHearts.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/RatingStar.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingStar.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingStar.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingStar~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingStar.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/RatingStar.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/SliderControl.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SliderControl.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SliderControl.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SliderControl~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SliderControl.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SliderControl.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/SquareGrid.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SquareGrid.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SquareGrid.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SquareGrid~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SquareGrid.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/SquareGrid.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Stepper.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Stepper.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Stepper.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Stepper~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Stepper.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Stepper.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/TextFieldView.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/TextFieldView.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/TextFieldView.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/TextFieldView~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/TextFieldView.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/TextFieldView.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Toast.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toast.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toast.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toast~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toast.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toast.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Toggle.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toggle.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toggle.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toggle~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toggle.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Toggle.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Tooltip.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Tooltip.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Tooltip.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Tooltip~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Tooltip.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Tooltip.dia"
+  },
+  "/Users/israelmanzo/Documents/GitHub/Utils/Sources/Utils/Utils.swift": {
+    "dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Utils.d",
+    "object": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Utils.swift.o",
+    "swiftmodule": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Utils~partial.swiftmodule",
+    "swift-dependencies": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Utils.swiftdeps",
+    "diagnostics": "/Users/israelmanzo/Documents/GitHub/Utils/.build/arm64-apple-macosx/debug/Utils.build/Utils.dia"
+  }
+}
