@@ -30,15 +30,15 @@ struct ToolbarView: View {
             Text("Sample View")
                 .navigationTitle("Sample View")
                 .toolbar {
-                    ToolbarButton(placement: .navigationBarTrailing, icon: "magnifyingglass", label: "Search") {
+                    ToolbarButton(.navigationBarTrailing, icon: "magnifyingglass", label: "Search") {
                         // action
                     }
                     
-                    ToolbarItemBuilder(placement: .navigationBarTrailing) {
+                    ToolbarItemBuilder(.navigationBarTrailing) {
                         Button("Tap") { }
                     }
                     
-                    ToolbarMenu(placement: .navigationBarLeading, icon: "") {
+                    ToolbarMenu(.navigationBarLeading, icon: "") {
                         ForEach(0...3, id: \.self) {
                             Text("\($0)")
                         }
@@ -57,7 +57,7 @@ public struct ToolbarItemBuilder<Content: View>: ToolbarContent {
     let placement: ToolbarItemPlacement
     let content: () -> Content
     
-    public init(placement: ToolbarItemPlacement, @ViewBuilder content: @escaping () -> Content) {
+    public init(_ placement: ToolbarItemPlacement, @ViewBuilder content: @escaping () -> Content) {
         self.placement = placement
         self.content = content
     }
@@ -74,7 +74,7 @@ public struct ToolbarButton: ToolbarContent {
     let label: String?
     let action: () -> Void
     
-    public init(placement: ToolbarItemPlacement, icon: String?, label: String?, action: @escaping () -> Void) {
+    public init(_ placement: ToolbarItemPlacement, icon: String?, label: String?, action: @escaping () -> Void) {
         self.placement = placement
         self.icon = icon
         self.label = label
@@ -103,7 +103,7 @@ public struct ToolbarMenu<Content: View>: ToolbarContent {
     let label: String
     let menuContent: () -> Content
     
-    public init(placement: ToolbarItemPlacement, icon: String, label: String = "More", menuContent: @escaping () -> Content) {
+    public init(_ placement: ToolbarItemPlacement, icon: String, label: String = "More", menuContent: @escaping () -> Content) {
         self.placement = placement
         self.icon = icon
         self.label = label
@@ -203,7 +203,7 @@ public struct ToolbarBadge: ToolbarContent {
     let badgeCount: Int
     let action: () -> Void
     
-    init(placement: ToolbarItemPlacement, icon: String, badgeCount: Int, action: @escaping () -> Void) {
+    public init(_ placement: ToolbarItemPlacement, icon: String, badgeCount: Int, action: @escaping () -> Void) {
         self.placement = placement
         self.icon = icon
         self.badgeCount = badgeCount
@@ -231,3 +231,100 @@ public struct ToolbarBadge: ToolbarContent {
         }
     }
 }
+
+// MARK: - Common Toolbar Items
+@MainActor
+public struct ToolbarItems {
+    
+    // MARK: - Back Button
+    public static func backButton(action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarButton(.navigationBarTrailing, icon: "chevron.left", label: "Back", action: action)
+    }
+    
+    // MARK: - Close Button
+    public static func closeButton(action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarButton(.navigationBarTrailing, icon: "xmark", label: "", action: action)
+    }
+    
+    // MARK: - Add Button
+    public static func addButton(action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarButton(.navigationBarTrailing, icon: "plus", label: "", action: action)
+    }
+    
+    // MARK: - Share Button
+    public static func shareButton(action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarButton(.navigationBarTrailing, icon: "square.and.arrow.up", label: "Share", action: action)
+    }
+    
+    // MARK: - Settings Button
+    public static func settingsButton(action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarButton(.navigationBarTrailing, icon: "gearshape.fill", label: "", action: action)
+    }
+    
+    // MARK: - Save Button
+    public static func saveButton(isEnabled: Bool = true, action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button("Save", action: action)
+                .disabled(!isEnabled)
+        }
+    }
+    
+    // MARK: - Delete Button
+    public static func deleteButton(action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarButton(.navigationBarTrailing, icon: "trash", label: "", action: action)
+    }
+    
+    // MARK: - More Menu
+    public static func moreMenu(@ViewBuilder content: @escaping () -> some View) -> some ToolbarContent {
+        ToolbarMenu(.navigationBarTrailing, icon: "ellipsis.circle") {
+            content()
+        }
+    }
+    
+    // MARK: - Help Button
+    public static func helpButton(action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarButton(.navigationBarTrailing, icon: "questionmark.circle", label: "", action: action)
+    }
+    
+    // MARK: - Refresh Button
+    public static func refreshButton(isLoading: Bool = false,action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            if isLoading {
+                ProgressView()
+                    .scaleEffect(0.8)
+            } else {
+                Button {
+                    action()
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                }
+            }
+        }
+    }
+    
+    // MARK: - Filter Button
+    public static func filterButton(isActive: Bool = false, action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button {
+                action()
+            } label: {
+                Image(systemName: isActive ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+            }
+        }
+    }
+    
+    // MARK: - Sort Button
+    public static func sortButton(action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarButton(
+            .navigationBarTrailing,
+            icon: "arrow.up.arrow.down.circle", label: "",
+            action: action
+        )
+    }
+    
+    // MARK: - Notifications Badge
+    public static func notificationsBadge(count: Int, action: @escaping () -> Void) -> some ToolbarContent {
+        ToolbarBadge(.navigationBarTrailing, icon: "bell.fill", badgeCount: count, action: action)
+    }
+}
+
