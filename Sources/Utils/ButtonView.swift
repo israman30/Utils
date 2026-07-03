@@ -563,7 +563,7 @@ extension View {
     }
 }
 
-#Preview("RoundButtonUtils - Light", traits: .sizeThatFitsLayout) {
+#Preview("RoundButtonUtils - Light") {
     HStack(spacing: 16) {
         RoundButtonUtils(icon: "heart.fill") { }
         RoundButtonUtils(label: "Share", icon: "square.and.arrow.up", backgroundColor: .blue, foregroundColor: .white) { }
@@ -573,7 +573,7 @@ extension View {
     .preferredColorScheme(.light)
 }
 
-#Preview("RoundButtonUtils - Dark", traits: .sizeThatFitsLayout) {
+#Preview("RoundButtonUtils - Dark") {
     HStack(spacing: 16) {
         RoundButtonUtils(icon: "heart.fill") { }
         RoundButtonUtils(label: "Share", icon: "square.and.arrow.up", backgroundColor: .blue, foregroundColor: .white) { }
