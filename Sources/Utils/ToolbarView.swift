@@ -33,6 +33,16 @@ struct ToolbarView: View {
                     ToolbarButton(placement: .navigationBarTrailing, icon: "magnifyingglass", label: "Search") {
                         // action
                     }
+                    
+                    ToolbarItemBuilder(placement: .navigationBarTrailing) {
+                        Button("Tap") { }
+                    }
+                    
+                    ToolbarMenu(placement: .navigationBarLeading, icon: "") {
+                        ForEach(0...3, id: \.self) {
+                            Text("\($0)")
+                        }
+                    }
                 }
         }
     }
@@ -80,6 +90,30 @@ public struct ToolbarButton: ToolbarContent {
                 } else if let label = label {
                     Text(label)
                 }
+            }
+        }
+    }
+}
+
+// MARK: - Menu Toolbar Item
+public struct ToolbarMenu<Content: View>: ToolbarContent {
+    let placement: ToolbarItemPlacement
+    let icon: String
+    let label: String
+    let menuContent: () -> Content
+    public init(placement: ToolbarItemPlacement, icon: String, label: String = "More", menuContent: @escaping () -> Content) {
+        self.placement = placement
+        self.icon = icon
+        self.label = label
+        self.menuContent = menuContent
+    }
+    
+    public var body: some ToolbarContent {
+        ToolbarItem(placement: placement) {
+            Menu {
+                menuContent()
+            } label: {
+                Label(label, systemImage: icon)
             }
         }
     }
