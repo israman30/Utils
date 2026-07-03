@@ -195,3 +195,39 @@ public struct ToolbarEditToggle: ToolbarContent {
         }
     }
 }
+
+// MARK: - Badge Toolbar Item
+public struct ToolbarBadge: ToolbarContent {
+    let placement: ToolbarItemPlacement
+    let icon: String
+    let badgeCount: Int
+    let action: () -> Void
+    
+    init(placement: ToolbarItemPlacement, icon: String, badgeCount: Int, action: @escaping () -> Void) {
+        self.placement = placement
+        self.icon = icon
+        self.badgeCount = badgeCount
+        self.action = action
+    }
+    
+    public var body: some ToolbarContent {
+        ToolbarItem(placement: placement) {
+            Button(action: action) {
+                ZStack(alignment: .topTrailing) {
+                    Image(systemName: icon)
+                    
+                    if badgeCount > 0 {
+                        Text("\(badgeCount)")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.white)
+                            .frame(width: 18, height: 18)
+                            .background(Color.red)
+                            .clipShape(Circle())
+                            .offset(x: 8, y: -8)
+                    }
+                }
+            }
+        }
+    }
+}
