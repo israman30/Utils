@@ -53,16 +53,16 @@ struct ToolbarView: View {
 }
 
 // MARK: - Reusable Toolbar Item
-struct ToolbarItemBuilder<Content: View>: ToolbarContent {
+public struct ToolbarItemBuilder<Content: View>: ToolbarContent {
     let placement: ToolbarItemPlacement
     let content: () -> Content
     
-    init(placement: ToolbarItemPlacement, @ViewBuilder content: @escaping () -> Content) {
+    public init(placement: ToolbarItemPlacement, @ViewBuilder content: @escaping () -> Content) {
         self.placement = placement
         self.content = content
     }
     
-    var body: some ToolbarContent {
+    public var body: some ToolbarContent {
         ToolbarItem(placement: placement, content: content)
     }
 }
@@ -73,6 +73,7 @@ public struct ToolbarButton: ToolbarContent {
     let icon: String?
     let label: String?
     let action: () -> Void
+    
     init(placement: ToolbarItemPlacement, icon: String?, label: String?, action: @escaping () -> Void) {
         self.placement = placement
         self.icon = icon
@@ -101,6 +102,7 @@ public struct ToolbarMenu<Content: View>: ToolbarContent {
     let icon: String
     let label: String
     let menuContent: () -> Content
+    
     public init(placement: ToolbarItemPlacement, icon: String, label: String = "More", menuContent: @escaping () -> Content) {
         self.placement = placement
         self.icon = icon
@@ -115,6 +117,40 @@ public struct ToolbarMenu<Content: View>: ToolbarContent {
             } label: {
                 Label(label, systemImage: icon)
             }
+        }
+    }
+}
+
+// MARK: - Search Toolbar Item
+public struct ToolbarSearchField: ToolbarContent {
+    let placement: ToolbarItemPlacement
+    @Binding var searchText: String
+    let placeholder: String = ""
+    
+    init(_ placement: ToolbarItemPlacement = .navigationBarTrailing, searchText: Binding<String>) {
+        self.placement = placement
+        self._searchText = searchText
+    }
+    
+    public var body: some ToolbarContent {
+        ToolbarItem(placement: placement) {
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .foregroundStyle(.secondary)
+                TextField(placeholder, text: $searchText)
+                
+                if !searchText.isEmpty {
+                    Button {
+                        searchText = ""
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            .padding(8)
+            .background(Color(.systemGray6))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
     }
 }
